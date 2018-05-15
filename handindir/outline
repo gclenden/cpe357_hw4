@@ -1,0 +1,68 @@
+Logic of Program:
+	The program will have three main functions and two modifier options. 
+
+	If the 'c' modifier is provided, the program will create an archive. If the path is a directory, 
+	that direcory and all the files and direcories below it are added to teh archive.
+		- The 'v' option will list the files as they are added, one per line.
+	
+	If the 't' option is set, the program will print an archive. The listing will be printed from
+	the given path and all of its decendants.
+		- The 'v' option the listings will have expanded information about each file.
+
+	If the 'x' option is set, the program will extract an archive. If there is no given path, all
+	of the files will be extracted. Otherwise, the path will be used as the head of the extraction
+	
+	With the 'S' option, the program requires that the magic number be nul-termined and checks for
+	the version number. Otherwise, the program only checks for the fice character of "ustar" in
+	the magic number and ignores the version field.
+
+Data Structures:
+	The primary data structure used in this program is a tar archive. The tar archive consists of
+	series of header record and their corresponding file file objects.
+
+	The header contains the metadata for the file. Specifically it contains the name, mode, uid, 
+	gid, size, mtime, chksum, typeflag, linkname, magic, version, uname, gname, devmajor, devminor
+	and prefix.
+
+	The data blocks are 512 bytes. The potions of a block that aren't completely filled by data
+	should be filled by zero bytes.
+
+	After the last record of the file is an End of Archive which is two blocks of all zero bytes.
+
+Algorithms:
+	The algorithms are most important in the processing of the direcories to and from the archive.
+	To build the directory tree from the specified path, the tar-create function will need to 
+	recursively traverse directories. 
+	
+	To rebuild the treech, the rebuilding function will need traverse the archive and place the 
+	directories as childern to correct parent in a top-down approach.
+
+Methods:
+	int main(int argc, char **argv);
+	int checkFlags(int argc, char **argv);
+	tarArchive *createArchive(int argc, char **argv, int flags);
+	char *findPath(int argc, char **argv);
+	int handleDirectory(char *path);
+	int writeHeader(DIR *dir);
+	int writeBlock(FILE *file);	
+
+	int listArchive(int argc, char **argv, int flags);
+	int traverseArchive(tarArchive *ta);
+	int printListing(tarArchive *ta);
+	
+	DIR *extractArchive(int argc, char **argv, int flags tarArchive *ta);
+	DIR *buildDirectory(tarArchive *ta, int offset);
+
+Unit Test/System Tests:
+	I will test the creation method initially by making sure that each file can reliably be made
+	into a file and a header. Once that works, make sure that the structure can be made correctly.
+	Finally, make sure that the archive completely matches the expected output.
+
+	I will test the print function similarly, initial testing one file at a time and the building 
+	up to the entire archive.
+	
+	I will test the extraction method by making sure the structure was able to successfully 
+	the directory structure. 
+
+	I will also have to test to make sure that the strict and verbose options also produce the 
+	expected output each.
