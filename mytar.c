@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include "mytar.h"
 
 int main(int argc, char** argv)
 {
 	uint8_t flags[6]; /*[c, t, x, v, f, S]*/
-	char *path=NULL;
 	int i;
-	
+	int ch;
 	
 	
 	for(i=0; i<6; i++)
@@ -16,30 +17,30 @@ int main(int argc, char** argv)
 
 	if(argc>=3)
 	{
-		
-		path=argv[argc-1];
 	
 		/*parse all of the give flags*/
-		while((ch=argv[1][i])!='\0')
+		i=0;
+		while((ch=argv[1][i++])!='\0')
 		{
+			printf("parsing flags -- ch: %c\n", ch);
 			switch(ch)
 			{
-				case(c):
+				case('c'):
 					flags[0]=1;
 					break;
-				case(t):
+				case('t'):
 					flags[1]=1;
 					break;
-				case(x):
+				case('x'):
 					flags[2]=1;		
 					break;		
-				case(v):
+				case('v'):
 					flags[3]=1;	
 					break;
-				case(f):
+				case('f'):
 					flags[4]=1;
 					break;
-				case(S):
+				case('S'):
 					flags[5]=1;
 					break;
 				default:
@@ -68,6 +69,7 @@ int main(int argc, char** argv)
 
 		else
 		{
+			printf("missing path\n");
 			printUsage();
 			close(STDOUT_FILENO);
 			return -1;
@@ -75,7 +77,7 @@ int main(int argc, char** argv)
 
 		
 		/* see what function I'll need to callf from here*/
-                if(flags[0] ^  flags[1] ^ flag[2])
+                if(flags[0] ^  flags[1] ^ flags[2])
                 {
                         /*we know what function to do*/
 			if(flags[0]);
@@ -91,6 +93,14 @@ int main(int argc, char** argv)
                         printUsage();
            
                 }
-	
-		return 0;
 	}
+	else 
+		printUsage();
+	return 0;
+	
+}
+
+void printUsage()
+{
+	printf("usage: mytar [ctxvS][f tarfile] [ path [ ... ] ]\n");
+}
