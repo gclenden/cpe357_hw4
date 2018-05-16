@@ -178,3 +178,18 @@ block *makeBlock()
 
 	return newBlock;
 }
+
+block *resetBlock(block *old)
+{
+	int i;
+
+	if(!old)
+		return NULL;
+	
+	for(i=0; i<512; i++)
+		old->data[i]=0;
+
+	return old;
+}
+	
+}
