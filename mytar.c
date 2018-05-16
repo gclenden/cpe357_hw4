@@ -188,6 +188,8 @@ void listVerbose(char *fileName) {
 	
 	/*print file name*/
 	printf("%s\n", fileName);
+
+}
 	
 int createArchive(int file, char *path, int verbose, int strict)
 {
