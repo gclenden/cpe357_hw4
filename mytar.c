@@ -153,6 +153,7 @@ void printUsage()
 	printf("usage: mytar [ctxvS][f tarfile] [ path [ ... ] ]\n");
 }
 
+
 void listVerbose(char *fileName) {
         struct stat fileStats;
         if (-1 == stat(fileName, &fileStats)) {
@@ -169,7 +170,7 @@ void listVerbose(char *fileName) {
         printf( (fileStats.st_mode & S_IXGRP) ? "x" : "-");
         printf( (fileStats.st_mode & S_IROTH) ? "r" : "-");
         printf( (fileStats.st_mode & S_IWOTH) ? "w" : "-");
-        printf( (fileStats.st_mode & S_IXOTH) ? "x" : "-");
+        printf( (fileStats.st_mode & S_IXOTH) ? "x " : "- ");
 
         /*get userID, get groupID, strcat them together with a / in between*/
         struct passwd *userInfo = getpwuid(fileStats.st_uid);
@@ -188,9 +189,10 @@ void listVerbose(char *fileName) {
         printf("%8ld ", fileStats.st_size);
 
         /*print year of last modification*/
-        char buff[20];
+        char buff[16];
         time_t modified = fileStats.st_mtime;
-        strftime(buff, 20, "%Y-%m-%d %H:%M:%S ", localtime(&modified));
+        strftime(buff, 20, "%Y-%m-%d %H:%M ", localtime(&modified));
+        printf("%16s ", buff);
 
         /*print file name*/
         printf("%s\n", fileName);
