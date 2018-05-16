@@ -15,3 +15,6 @@ clean :
 
 handin:
 	handin getaylor-grader 357hw4-11 handindir/*
+
+test: 
+	~getaylor-grader/tryAsgn4
