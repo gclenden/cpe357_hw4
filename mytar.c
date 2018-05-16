@@ -60,10 +60,6 @@ int main(int argc, char** argv)
 			}
 
 			else
-			{
-				dup2(i, STDOUT_FILENO);
-				close(i);
-			}
 
 			pathindex=3;
 		}
@@ -92,6 +88,7 @@ int main(int argc, char** argv)
 				{
 					if(createArchive(file, argv[pathindex], flags[3], flags[5])<0)
 					{
+						close(file);
 						perror("createArchive");
 						return -1;
 					}
@@ -106,6 +103,7 @@ int main(int argc, char** argv)
                                 {
 					if(listArchive(file, argv[pathindex], flags[3], flags[5])<0)
                                         {       
+						close(file);
                                                 perror("createArchive");
                                                 return -1;
                                         }
@@ -120,6 +118,7 @@ int main(int argc, char** argv)
                                 {	
                 			if(extractArchive(file, argv[pathindex], flags[3], flags[5])<0)
                                         {       
+						close(file);
                                                 perror("createArchive");
                                                 return -1;
                                         }
@@ -144,23 +143,23 @@ int main(int argc, char** argv)
 
 void printUsage()
 {
-	printf("usage: mytar [ctxvS][f tarfile] [ path [ ... ] ]\n");
+	fprintf(stderr, "usage: mytar [ctxvS][f tarfile] [ path [ ... ] ]\n");
 }
 
 int createArchive(int file, char *path, int verbose, int strict)
 {
-	printf("path:%s\n", path);
+	printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
 	return 0;
 }
 
 int listArchive(int file, char *path, int verbose, int strict)
 {
-	printf("path:%s\n", path);
+	printf("listArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
 	return 0;
 }
 
 int extractArchive(int file, char *path, int verbose, int strict)
 {
-	printf("path:%s\n", path);
+	printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
 	return 0;
 }
