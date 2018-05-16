@@ -4,6 +4,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "mytar.h"
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <string.h>
+#include <time.h>
+#include <pwd.h>
+#include <grp.h>
 
 int main(int argc, char** argv)
 {
@@ -148,46 +154,46 @@ void printUsage()
 }
 
 void listVerbose(char *fileName) {
-	struct stat fileStat;
-	if (-1 == stat(fileName, &fileStat)) {
-		printf("stat error\n");
-	}
+        struct stat fileStats;
+        if (-1 == stat(fileName, &fileStats)) {
+                printf("stat error\n");
+        }
 
-	/*print permissions of the file*/
-	printf( (S_ISDIR(fileStats.st_mode)) ? "d" : "-");
-    	printf( (fileStats.st_mode & S_IRUSR) ? "r" : "-");
-    	printf( (fileStats.st_mode & S_IWUSR) ? "w" : "-");
-    	printf( (fileStats.st_mode & S_IXUSR) ? "x" : "-");
-    	printf( (fileStats.st_mode & S_IRGRP) ? "r" : "-");
-    	printf( (fileStats.st_mode & S_IWGRP) ? "w" : "-");
-    	printf( (fileStats.st_mode & S_IXGRP) ? "x" : "-");
-    	printf( (fileStats.st_mode & S_IROTH) ? "r" : "-");
-    	printf( (fileStats.st_mode & S_IWOTH) ? "w" : "-");
-    	printf( (fileStats.st_mode & S_IXOTH) ? "x" : "-");
+        /*print permissions of the file*/
+        printf( (S_ISDIR(fileStats.st_mode)) ? "d" : "-");
+        printf( (fileStats.st_mode & S_IRUSR) ? "r" : "-");
+        printf( (fileStats.st_mode & S_IWUSR) ? "w" : "-");
+        printf( (fileStats.st_mode & S_IXUSR) ? "x" : "-");
+        printf( (fileStats.st_mode & S_IRGRP) ? "r" : "-");
+        printf( (fileStats.st_mode & S_IWGRP) ? "w" : "-");
+        printf( (fileStats.st_mode & S_IXGRP) ? "x" : "-");
+        printf( (fileStats.st_mode & S_IROTH) ? "r" : "-");
+        printf( (fileStats.st_mode & S_IWOTH) ? "w" : "-");
+        printf( (fileStats.st_mode & S_IXOTH) ? "x" : "-");
 
-	/*get userID, get groupID, strcat them together with a / in between*/
-	struct passwd *userInfo = getpwuid(fileStats.st_uid);
-	struct group *groupInfo = getgrgid(fileStats.st_gid);
-	int userNameLen = strlen(userInfo->pw_name);
-	int groupNameLen = strlen(groupInfo->gr_name);
-	char *names = (char*) malloc(userNameLen + groupNameLen + 2);
-	names = userInfo->pw_name;
-	names[userNameLen] = '/';
-	strcat(names, groupInfo->gr_name);
+        /*get userID, get groupID, strcat them together with a / in between*/
+        struct passwd *userInfo = getpwuid(fileStats.st_uid);
+        struct group *groupInfo = getgrgid(fileStats.st_gid);
+        int userNameLen = strlen(userInfo->pw_name);
+        int groupNameLen = strlen(groupInfo->gr_name);
+        char *names = (char*) malloc(userNameLen + groupNameLen + 2);
+        names = userInfo->pw_name;
+        names[userNameLen] = '/';
+        strcat(names, groupInfo->gr_name);
 
-	/*print userID/groupID, left aligned in size of 17*/
-	printf("%-17s ", names);
+        /*print userID/groupID, left aligned in size of 17*/
+        printf("%-17s ", names);
 
-	/*print size of file, right aligned in size of 8*/
-	printf("%8ld ", fileStat.st_size);
+        /*print size of file, right aligned in size of 8*/
+        printf("%8ld ", fileStats.st_size);
 
-	/*print year of last modification*/
-	char buff[20];
-	time_t modified = fileStat.st_mtime;
-	strftime(buff, 20, "%Y-%m-%d %H:%M:%S ", localtime(&now));
-	
-	/*print file name*/
-	printf("%s\n", fileName);
+        /*print year of last modification*/
+        char buff[20];
+        time_t modified = fileStats.st_mtime;
+        strftime(buff, 20, "%Y-%m-%d %H:%M:%S ", localtime(&modified));
+
+        /*print file name*/
+        printf("%s\n", fileName);
 
 }
 	
