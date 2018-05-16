@@ -137,6 +137,7 @@ int main(int argc, char** argv)
 	}
 	else 
 		printUsage();
+	
 	return 0;
 	
 }
@@ -146,20 +147,34 @@ void printUsage()
 	fprintf(stderr, "usage: mytar [ctxvS][f tarfile] [ path [ ... ] ]\n");
 }
 
-int createArchive(int file, char *path, int verbose, int strict)
+block *makeBlock()
 {
-	printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
-	return 0;
-}
+	int i;
 
-int listArchive(int file, char *path, int verbose, int strict)
-{
-	printf("listArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
-	return 0;
-}
+	block *newBlock=NULL;
 
-int extractArchive(int file, char *path, int verbose, int strict)
-{
-	printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
-	return 0;
+	if((newBlock=(block *)malloc(sizeof(block)))==NULL)
+		return NULL;
+	
+	for(i=0; i<512; i++)
+		newBlock->data[i]=0;
+
+	newBlock->name = newBlock->data;
+	newBlock->mode = newBlock->data + 100;
+	newBlock->uid = newBlock->data + 108;
+        newBlock->gid = newBlock->data + 116;
+        newBlock->size = newBlock->data + 124;
+        newBlock->mtime = newBlock->data + 136;
+        newBlock->chksum = newBlock->data + 148;
+        newBlock->typeflag = newBlock->data + 156;
+        newBlock->linkname = newBlock->data + 157;
+        newBlock->magic = newBlock->data + 257;
+        newBlock->version = newBlock->data + 263;
+        newBlock->uname = newBlock->data + 265;
+        newBlock->gname = newBlock->data + 297;
+        newBlock->devmajor = newBlock->data + 329;
+        newBlock->devminor = newBlock->data + 337;
+	newBlock->prefix = newBlock->data + 345;
+
+	return newBlock;
 }
