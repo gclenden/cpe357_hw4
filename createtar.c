@@ -3,11 +3,28 @@
 #include <string.h>
 #include "createtar.h"
 #include "mytar.h"
+#define VERBOSE 0
+
+/*main function to test createArchive*/
+int main(int argc, char *argv[]){
+	
+	int fd = fileno(".");	
+	int archive = createArchive(fd, "//home/cadaly/CSC357/hw4", 0, 0);
+
+	return 0;
+
+}
 
 int createArchive(int file, char *path, int verbose, int strict)
 {
         printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
-	block *header = makeBlock();
+	block *header = makeBlock();i
+	
+	struct stat fileStats;
+	if (fstat(file, &fileStats) < 0) {
+		perror("error in stat buffering\n");
+		exit(-1);
+	}
 	
 	/*check size of file path name, and store name and prefix (if necessary)*/
 	int pathLen = strlen(path);
@@ -21,9 +38,13 @@ int createArchive(int file, char *path, int verbose, int strict)
 
 	printf("%s\n", (char*) header->name);
 
+	/*write octal permissions into a buffer and then write to block*/
+	char mode[8];
+	int permissions = fileStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
+	int size = snprintf(mode, 8, "%o", permissions);
+	strcpy((char*)header->mode, mode);
+
 	
         return 0;
 }
-
-uint8_t getOctalPermissions()
 
