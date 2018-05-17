@@ -11,9 +11,11 @@
 #include <pwd.h>
 #include <grp.h>
 
+int listArchive(int file, char *path, int verbose, int strict){return 0;}
+
 void list(char *fileName, int verbose) {
 
-        if (!VERBOSE) {
+        if (!verbose) {
 
                 /*print file name*/
                 printf("%s\n", fileName);

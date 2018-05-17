@@ -3,14 +3,19 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/types.h>
+
 #include "mytar.h"
+#include "listtar.h"
+#include "extracttar.h"
+#include "createtar.h"
 
 int main(int argc, char** argv)
 {
 	uint8_t flags[6]; /*[c, t, x, v, f, S]*/
 	int i;
 	int ch;
-	int pathindex;
+	int pathindex=2;
 	int file=STDOUT_FILENO;
 	
 	
@@ -49,9 +54,8 @@ int main(int argc, char** argv)
 					return -1;
 			}
 		}
-	
-		/* f flag given -- update the output file*/
-		if(flags[4] && argc >= 4)
+/*	
+		if(flags[4])
 		{
 			if((file=open(argv[2], O_RDWR | O_TRUNC | O_CREAT, 0666))<0)
 			{
@@ -61,29 +65,44 @@ int main(int argc, char** argv)
 
 			else
 
-			pathindex=3;
+			pathindex++;
 		}
 
-		else if(!flags[4] && argc>=3)
+		else if(!flags[4])
 		{
 			pathindex=2;
 		}
 
 		else
 		{
-			printf("missing path\n");
 			printUsage();
 			close(STDOUT_FILENO);
 			return -1;
 		}
-
+*/
 		
 		/* see what function I'll need to callf from here*/
                 if(flags[0] ^  flags[1] ^ flags[2])
                 {
                         /*we know what function to do*/
+			/*createArchive*/
 			if(flags[0])
 			{
+				
+				if(flags[4])
+                		{
+					pathindex++;
+                        		if((file=open(argv[2], O_WRONLY | O_TRUNC | O_CREAT, 0666))<0)
+                        		{
+                                		perror("open f");
+                                		return -1;
+                        		}
+				}
+				
+				/*no path was provided, just return*/
+				if(pathindex==argc)
+					return 0;         	
+	
 				while(pathindex<argc)
 				{
 					if(createArchive(file, argv[pathindex], flags[3], flags[5])<0)
@@ -97,29 +116,92 @@ int main(int argc, char** argv)
 				}
 			}
 		
+			/*listArchive*/
 			else if(flags[1])
 			{
-				while(pathindex<argc)
+
+				if(flags[4])
                                 {
-					if(listArchive(file, argv[pathindex], flags[3], flags[5])<0)
-                                        {       
-						close(file);
-                                                perror("createArchive");
+                                        pathindex++;
+                                        if((file=open(argv[2], O_RDONLY, 0666))<0)
+                                        {
+                                                perror("open f");
                                                 return -1;
                                         }
-
-                                        pathindex++;
                                 }
+
+                                /*no path was provided, print everything*/
+                                if(pathindex==argc)
+                                {
+				        if(listArchive(file, "", flags[3], flags[5])<0)
+                                        {       
+                                                close(file);
+                                                perror("listArchive");
+                                                return -1;
+                                        }
+				}
+
+				else
+				{	while(pathindex<argc)
+                                	{
+						if(listArchive(file, argv[pathindex], flags[3], flags[5])<0)
+	                                        {       
+							close(file);
+	                                                perror("listArchive");
+	                                                return -1;
+	                                        }
+	
+	                                        pathindex++;
+	                                }
+				}
 			}
 
+			/*extractArchive*/
 			else if(flags[2])
 			{
+				if(flags[4])
+                                {
+                                        pathindex++;
+                                        if((file=open(argv[2], O_RDONLY, 0666))<0)
+                                        {
+                                                perror("open f");
+                                                return -1;
+                                        }
+                                }
+
+                                /*no path was provided, print everything*/
+                                if(pathindex==argc)
+                                {
+                                        if(extractArchive(file, "", flags[3], flags[5])<0)
+                                        {
+                                                close(file);
+                                                perror("extractArchive");
+                                                return -1;
+                                        }
+                                }
+
+
+				if(flags[4])
+                                {
+                                        pathindex++;
+                                        if((file=open(argv[2], O_WRONLY | O_TRUNC | O_CREAT, 0666))<0)
+                                        {
+                                                perror("open f");
+                                                return -1;
+                                        }
+                                }
+
+                                /*no path was provided, just return*/
+                                if(pathindex==argc)
+                                        return 0;
+				
+
 				while(pathindex<argc)
                                 {	
                 			if(extractArchive(file, argv[pathindex], flags[3], flags[5])<0)
                                         {       
 						close(file);
-                                                perror("createArchive");
+                                                perror("extractArchive");
                                                 return -1;
                                         }
 
@@ -192,4 +274,3 @@ block *resetBlock(block *old)
 	return old;
 }
 	
-}
