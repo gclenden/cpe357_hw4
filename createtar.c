@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pwd.h>
+#include <grp.h>
+#include <sys/stat.h>
 #include "createtar.h"
 #include "mytar.h"
 #define VERBOSE 0
 
 /*main function to test createArchive*/
 int main(int argc, char *argv[]){
-	
-	int fd = fileno(".");	
-	int archive = createArchive(fd, "//home/cadaly/CSC357/hw4", 0, 0);
+		
+	int archive = createArchive(1, "//home/cadaly/CSC357/hw4", 0, 0);
 
 	return 0;
 
@@ -18,7 +20,7 @@ int main(int argc, char *argv[]){
 int createArchive(int file, char *path, int verbose, int strict)
 {
         printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
-	block *header = makeBlock();i
+	block *header = makeBlock();
 	
 	struct stat fileStats;
 	if (stat(path, &fileStats) < 0) {
