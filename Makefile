@@ -18,3 +18,8 @@ handin:
 
 test: 
 	~getaylor-grader/tryAsgn4
+
+pushmaster:
+	git add *
+	git commit -a
+	git push origin master
