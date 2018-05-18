@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #include "mytar.h"
 #include "listtar.h"
@@ -94,7 +95,7 @@ int main(int argc, char** argv)
 					pathindex++;
                         		if((file=open(argv[2], O_WRONLY | O_TRUNC | O_CREAT, 0666))<0)
                         		{
-                                		perror("open f");
+                                		perror("create archive open f");
                                 		return -1;
                         		}
 				}
@@ -125,7 +126,7 @@ int main(int argc, char** argv)
                                         pathindex++;
                                         if((file=open(argv[2], O_RDONLY, 0666))<0)
                                         {
-                                                perror("open f");
+                                                perror("list archive open f");
                                                 return -1;
                                         }
                                 }
@@ -164,7 +165,7 @@ int main(int argc, char** argv)
                                         pathindex++;
                                         if((file=open(argv[2], O_RDONLY, 0666))<0)
                                         {
-                                                perror("open f");
+                                                perror("extract archive open f");
                                                 return -1;
                                         }
                                 }
@@ -172,29 +173,13 @@ int main(int argc, char** argv)
                                 /*no path was provided, print everything*/
                                 if(pathindex==argc)
                                 {
-                                        if(extractArchive(file, "", flags[3], flags[5])<0)
+                                        if(extractArchive(file, "", flags[3], flags[5])<0 && errno)
                                         {
                                                 close(file);
                                                 perror("extractArchive");
                                                 return -1;
                                         }
-                                }
-
-
-				if(flags[4])
-                                {
-                                        pathindex++;
-                                        if((file=open(argv[2], O_WRONLY | O_TRUNC | O_CREAT, 0666))<0)
-                                        {
-                                                perror("open f");
-                                                return -1;
-                                        }
-                                }
-
-                                /*no path was provided, just return*/
-                                if(pathindex==argc)
-                                        return 0;
-				
+                          	}
 
 				while(pathindex<argc)
                                 {	
@@ -231,15 +216,12 @@ void printUsage()
 
 block *makeBlock()
 {
-	int i;
-
 	block *newBlock=NULL;
 
 	if((newBlock=(block *)malloc(sizeof(block)))==NULL)
 		return NULL;
 	
-	for(i=0; i<512; i++)
-		newBlock->data[i]=0;
+	memset(newBlock, 0, sizeof(block));	
 
 	newBlock->name = newBlock->data;
 	newBlock->mode = newBlock->data + 100;
@@ -263,14 +245,71 @@ block *makeBlock()
 
 block *resetBlock(block *old)
 {
-	int i;
-
 	if(!old)
 		return NULL;
 	
-	for(i=0; i<512; i++)
-		old->data[i]=0;
+	memset(old, 0, 512);
 
 	return old;
 }
+
+metaData *makeMetaData(block *myBlock)
+{
+	metaData *newMD=NULL;
+
+	if(!myBlock)
+		return NULL;
 	
+	newMD = (metaData *)malloc(sizeof(metaData));
+	if(!newMD)
+		return NULL;
+	
+	memset(newMD, 0, sizeof(metaData));
+
+	return newMD;
+}
+
+metaData *updateMetaData(metaData *myMD, block *header)
+{
+	char buffer[33];
+		
+        memset(myMD, 0, sizeof(metaData));
+
+        if(strcat((char *)myMD->name, (char *)header->prefix)==NULL ||
+           strcat((char *)myMD->name, (char *)header->name)==NULL)
+        {
+                free(myMD);
+                return NULL;
+        }
+
+	if(strcpy(buffer, (char *)header->mode)==NULL)
+	{
+		free(myMD);
+		return NULL;
+	}
+	
+	/*check for an execute permissions*/
+	if(((buffer[2]-'0')%2)||((buffer[3]-'0')%2)||((buffer[4]-'0')%2))
+		myMD->mode=0777;
+	
+	else
+		myMD->mode=0666;
+
+        if(! strncpy(buffer, (char *)header->size, 12))
+        {
+        	free(myMD);
+                return NULL;
+        }
+
+        myMD->size=strtol(buffer, NULL, 8);
+
+	if(strncpy(buffer, (char *)header->mtime, 12)==NULL)
+        {
+                free(myMD);
+                return NULL;
+        }
+
+	myMD->mtime=strtol(buffer, NULL, 8);
+	
+	return myMD;
+}

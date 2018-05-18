@@ -8,16 +8,16 @@ all : $(MAIN)
 $(MAIN) : $(OBJS)
 	$(CC) $(CFLAGS) -o $(MAIN) $(OBJS)
 
-mytar.o: mytar.c
+mytar.o: mytar.c mytar.h
 	$(CC) $(CFLAGS) -c mytar.c
 
-createtar.o: createtar.c
+createtar.o: createtar.c createtar.h
 	$(CC) $(CFLAGS) -c createtar.c
 
-listtar.o: listtar.c
+listtar.o: listtar.c listtar.h
 	$(CC) $(CFLAGS) -c listtar.c
 
-extracttar.o: extracttar.c
+extracttar.o: extracttar.c extracttar.h
 	$(CC) $(CFLAGS) -c extracttar.c
 
 clean :
