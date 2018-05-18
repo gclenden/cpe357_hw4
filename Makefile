@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS =-Wall -ansi -g
+CFLAGS =-Wall -g
 MAIN = mytar
 OBJS = mytar.o createtar.o listtar.o extracttar.o
 
