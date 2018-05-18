@@ -23,13 +23,13 @@ int createArchive(int file, char *path, int verbose, int strict)
 	}
 	
 	/*check size of file path name, and store name and prefix (if necessary)*/
-	int pathLen = strlen(path);
-	if (pathLen <= 100) {
+	int split = prefix(path);
+	if (split == -1) {
 		strcpy((char*)header->name, path);
 	} else {
-		strncpy((char*)header->name, path, 100);
-		char *prefix = &(path[100]);
-		strcpy((char*)header->prefix, prefix);
+		strncpy((char*)header->prefix, path, split - 1);
+		char *name = &(path[split + 1]);
+		strcpy((char*)header->name, name);
 	}
 
 	printf("%s\n", (char*) header->name);
@@ -165,3 +165,26 @@ int createArchive(int file, char *path, int verbose, int strict)
 
         return 0;
 }
+
+/*returns the last index of prefix path if there should be a prefix, -1 if no prefix*/
+
+int prefix(char *path) {
+	int len = strlen(path);
+	int lastIndex = -1;
+	if (len <= 99) {
+		return -1;
+	} else {
+		int index = 0;
+		while (lastIndex == -1) {
+			if (path[index] == '/' && (len - index <= 99)) {
+				lastIndex = index;
+			}
+		}
+	}
+	return lastIndex;
+}
+
+
+
+
+
