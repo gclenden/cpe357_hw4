@@ -12,7 +12,14 @@
 
 int createArchive(int file, char *path, int verbose, int strict)
 {
+	
         printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
+	
+	if (strlen(path) > 256) {
+		perror("path name must be shorter than 256 characters\n");
+		return -1;
+	}
+
 	block *header = makeBlock();
 	int fd = open(path, O_RDONLY);
 
