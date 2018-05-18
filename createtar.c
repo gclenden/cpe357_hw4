@@ -44,7 +44,7 @@ int createArchive(int file, char *path, int verbose, int strict)
 	/*write octal permissions into a buffer and then write to block*/
 	char modeBuff[8];
 	int mode = fileStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
-	snprintf(modeBuff, 8, "%o", mode);
+	snprintf(modeBuff, 8, "%08o", mode);
 	strcpy((char*)header->mode, modeBuff);
 
 	/*write octal uid into buffer then write to block*/
@@ -168,7 +168,21 @@ int createArchive(int file, char *path, int verbose, int strict)
 		}
 	}
 	write(file, &(bodyBuff->data), 512);
+	
+	if((currDir=openDir(path))<NULL)
+	{
+		if(errno&ENOTDIR)
+			return 0;
+		return -1;
+	}
 
+	struct dirent nextdir;
+	while((nextDir=readdir(currDir))!=NULL)
+	{
+		if(strcmp(nextDir.d_name, ".")||strcmp(nextDir.d_name, "..")
+			createArchive(file, nextDir.d_name, verbose, strict);
+	}
+	
 
         return 0;
 }
@@ -192,6 +206,6 @@ int prefix(char *path) {
 }
 
 
-
+void zeroPad(char buff[], 
 
 
