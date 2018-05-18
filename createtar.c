@@ -150,10 +150,18 @@ int createArchive(int file, char *path, int verbose, int strict)
 
 	/*write contents of old file to new file*/
 	uint8_t byte;
+	block *bodyBuff = resetBlock(header);	
+	int index = 0;
 	while (read(fd, &byte, 1) != 0) {
-		write(file, &byte, 1);
+		bodyBuff->data[index++] = byte;
+		if (index == 512) {
+			write(file, &(bodyBuff->data), 512);
+			index = 0;
+			bodyBuff = resetBlock(bodyBuff);
+		}
 	}
+	write(file, &(bodyBuff->data), 512);
+
 
         return 0;
 }
-
