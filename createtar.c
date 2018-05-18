@@ -129,7 +129,7 @@ int createArchive(int file, char *path, int verbose, int strict)
 	snprintf(chksumBuff, 8, "%o", sum);
 	strcpy((char*)header->chksum, chksumBuff);
 
-	printf("name: %s\n", header->name);
+/*	printf("name: %s\n", header->name);
 	printf("mode: %s\n", header->mode);
 	printf("uid: %s\n", header->uid);
 	printf("gid: %s\n", header->gid);
@@ -143,7 +143,7 @@ int createArchive(int file, char *path, int verbose, int strict)
         printf("gname: %s\n", header->gname);
 	printf("devmajor:  %s\n", header->devmajor);
 	printf("devminor:  %s\n", header->devminor);
-        printf("prefix: %s\n", header->prefix);
+        printf("prefix: %s\n", header->prefix); */
 
 	/*write the header to new file*/
 	write(file, &(header->data), 512);
