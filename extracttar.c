@@ -1,43 +1,56 @@
 #include <string.h>
+#include <errno.h>
+#include <unistd.h>
+
 #include "extracttar.h"
 
 int extractArchive(int file, char *path, int verbose, int strict)
-{
+{	
+	struct utimbuf modtime;
 	int nextheader = 0;
 	block *newBlock = NULL;
-	uint8_t tempsize[13];
-	int size;
+	metaData *newMetaData = NULL;
+	uint8_t buffer[32];
 	int i;		
 	int newFile=-1;
 	int eoa = 0;
 	int pathlen=0;
-	int prefixlen=0;
-	uint8_t fullName[256];	
+	int writesize;
 
-	printf("extractArchive\n");
 	if((newBlock=makeBlock())==NULL)
 		return -1;
+
+	if((newMetaData=makeMetaData(newBlock))==NULL)
+	{
+		free(newBlock);
+		return -1;
+	}
 
 	pathlen=strlen(path);
 	
 	while(read(file, newBlock->data, 512)>0)
 	{
-		printf("extracting while loop\n");
-
+		
+		memset(buffer, 0, 32);
+/*
 		for(i=0; i<256; i++)
                 	fullName[i]=0;
 
-		if(strcat((char *)fullName, (char *)newBlock->prefix)==NULL || strcat((char *)fullName, (char *)newBlock->name)==NULL)
+		for(i=0; i<32; i++)
+			buffer[i]=0;
+*/
+/*
+		if(strcat((char *)newMetaData->name, (char *)newBlock->prefix)==NULL || 
+		   strcat((char *)newMetaData->name, (char *)newBlock->name)==NULL)
 		{
 			free(newBlock);
 			return -1;
 		}
-
-		printf("fullName: %s\n", fullName);
+*/
 
 		if(nextheader == 0)
 		{
-			if(newFile)
+			if(newFile>0)
 			{
 				close(newFile);
 				newFile=-1;			
@@ -52,15 +65,31 @@ int extractArchive(int file, char *path, int verbose, int strict)
 				}			
 			}	
 
-			if(i<512 && ++eoa==2)
+			if(i==512)
 			{
-				return 0;
-			}
-			
-			printf("header found -- Path: %s -- Prefix: %s -- Name: %s\n", path, (char *)newBlock->prefix, (char *)newBlock->name);
+				eoa++;
+				if(eoa==2)
+				{
+					free(newMetaData);
+					free(newBlock);
+					return 0;
+				}
 
-			prefixlen=strlen((char *)newBlock->prefix);
+				else
+					continue;
+			}
+
+			if(updateMetaData(newMetaData, newBlock)==NULL)
+			{
+				free(newMetaData);
+				free(newBlock);
+				return -1;
+			}			
+			
+			
 /*
+			prefixlen=strlen((char *)newBlock->prefix);
+
 			if(prefixlen == 0 || strncmp((char *)path, (char *)newBlock->prefix, prefixlen)==0)
 			{
 				if(strncmp((char *)path+prefixlen, (char *)newBlock->name, pathlen-prefixlen)!=0)
@@ -72,86 +101,115 @@ int extractArchive(int file, char *path, int verbose, int strict)
 			}
 */
 
-			if(strncmp((char *)path, (char *)fullName, pathlen)!=0)
-				continue;
-		
-	
+			if(strncmp((char *)path, (char *)newMetaData->name, pathlen)!=0)
+				continue;	
 			
-			printf("\tthe path matches: %s\n", fullName);		
-
+			if(verbose)
+				printf("%s\n", newMetaData->name);
+			
+			/*the paths match, extract this entry*/
 			switch(*(newBlock->typeflag))
 			{
 				case '0':
 				case '\0':
 					/*the header is for a file*/
-					printf("\tthis is a file\n");
-
-					if((newFile=open((char *)fullName, O_RDONLY | O_TRUNC | O_CREAT, 0666))<0)
+					if((newFile=open((char *)newMetaData->name, O_WRONLY | O_TRUNC | 
+								O_CREAT, newMetaData->mode))<0)
 		                       	{
 						free(newBlock);
+						free(newMetaData);
                                 		return -1;
                         		}
 
 					break;
 				case '2':
-					printf("\tthis is a symlink\n");
+					if(symlink(newMetaData->name, newBlock->linkname && errno!=EEXIST)<0)
+					{
+						free(newMetaData);
+						free(newBlock);
+						return -1;
+					}
+
 					break;
 					/*the header is a for a symbolic link*/
 				case '5':
 					/*the header if for a directory*/
-					printf("\tthis is a directory\n");
-					if(mkdir((char *)fullName, 0666)<0)	
+					if(mkdir((char *)newMetaData->name, newMetaData->mode)<0)	
 					{
-						free(newBlock);
-						return -1;
-					}
+						if(!(errno&EEXIST))
+						{
+							free(newMetaData);
+							free(newBlock);
+							return -1;
+						}
+					}	
 				
 					break;
 				default:
-					printf("wrong typeflag format\n");
-					return -1;
-
-					
+					return -1;					
 			}
 
-			printf("\tpassed the switch\n");
+			/*update the mod time*/
+                        modtime.actime=newMetaData->mtime;
+                        modtime.modtime=newMetaData->mtime;
+                        if(utime(newMetaData->name, &modtime)<0)
+                        {
+	                        free(newBlock);
+        	                free(newMetaData);
+                                return -1;
+                	}
 
-			tempsize[12]=0;
-
-			if(strncpy((char *)tempsize, (char *)newBlock->size, 12)==NULL)
+/*			tempsize[11]=0;
+			if(! strncpy((char *)tempsize, (char *)newBlock->size, 11))
 			{
 				free(newBlock);
 				return -1;
 			}
-			
-			size=0;
-			/*convert the octal ascii size of the file to an integer*/
-			for(i=0; i<12; i++)
-			{
-				size+=power(tempsize[11-i]-'0', i);
-			}
 
-			nextheader=size/512;
+			printf("the tempsize: %s\n", (char *)tempsize);
 
-			if(size%512)
+			size=strtol((char *)tempsize, NULL, 8);
+*/			
+			nextheader=newMetaData->size/512;
+
+			if(newMetaData->size%512)
 				nextheader+=1;      
 		} 
 
 		/*this is data from the last header*/
 		else
 		{
-			if(write(newFile, newBlock->data, 512)!=512)
+			if(nextheader>1)
+				writesize=512;
+			
+			else
+				writesize=newMetaData->size%512;
+			
+			if(newFile>0 && write(newFile, newBlock->data, writesize)!=writesize)
 			{
+				free(newMetaData);
 				free(newBlock);
 				close(newFile);
 				return -1;
 			}
 
+			/*update the mod time*/
+                        modtime.actime=newMetaData->mtime;
+                        modtime.modtime=newMetaData->mtime;
+                        if(utime(newMetaData->name, &modtime)<0)
+                        {
+                                free(newBlock);
+                                free(newMetaData);
+				printf("couldn't update the modtime");
+                                return -1;
+                        }
 
+			nextheader--;
 		}
 		
 	}
-
+	free(newMetaData);
+	free(newBlock);
 	return 0;
 }		
 
