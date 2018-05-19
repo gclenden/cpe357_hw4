@@ -6,6 +6,9 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/stat.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <errno.h>
 #include "createtar.h"
 #include "mytar.h"
 #define VERBOSE 0
@@ -44,32 +47,32 @@ int createArchive(int file, char *path, int verbose, int strict)
 	/*write octal permissions into a buffer and then write to block*/
 	char modeBuff[8];
 	int mode = fileStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
-	snprintf(modeBuff, 8, "%08o", mode);
+	snprintf(modeBuff, 8, "%07o", mode);
 	strcpy((char*)header->mode, modeBuff);
 
 	/*write octal uid into buffer then write to block*/
 	char uidBuff[8];
 	int uid = fileStats.st_uid;
-	snprintf(uidBuff, 8, "%o", uid);
+	snprintf(uidBuff, 8, "%07o", uid);
 	strcpy((char*)header->uid, uidBuff);
 
 	/*write octal gid """"" */
 	char gidBuff[8];
 	int gid = fileStats.st_gid;
-	snprintf(gidBuff, 8, "%o", gid);
+	snprintf(gidBuff, 8, "%07o", gid);
 	strcpy((char*)header->gid, gidBuff);
 
 	/*to conform with return value of snprintf above, size is bytes written to the buff and file_size is the number of bytes in the file. write octal file size to block*/
 
 	char fileSizeBuff[12];
 	int fileSize = fileStats.st_size;
-	snprintf(fileSizeBuff, 12, "%o", fileSize);
+	snprintf(fileSizeBuff, 12, "%011o", fileSize);
 	strcpy((char*)header->size, fileSizeBuff);
 	
 	/*write octal mtime to block*/
 	char mtimeBuff[12];
 	int mtime = fileStats.st_mtime;
-	snprintf(mtimeBuff, 12, "%o", mtime);
+	snprintf(mtimeBuff, 12, "%0o", mtime);
 	strcpy((char*)header->mtime, mtimeBuff);
 
 	/*see chksum filled in at the end, depends on all other fields being completed*/
@@ -133,7 +136,7 @@ int createArchive(int file, char *path, int verbose, int strict)
 		sum += header->data[i];
 	}
 	char chksumBuff[8];
-	snprintf(chksumBuff, 8, "%o", sum);
+	snprintf(chksumBuff, 8, "%07o", sum);
 	strcpy((char*)header->chksum, chksumBuff);
 
 /*	printf("name: %s\n", header->name);
@@ -168,19 +171,28 @@ int createArchive(int file, char *path, int verbose, int strict)
 		}
 	}
 	write(file, &(bodyBuff->data), 512);
-	
-	if((currDir=openDir(path))<NULL)
+	DIR *currDir;	
+	if((currDir=opendir(path))==NULL)
 	{
 		if(errno&ENOTDIR)
 			return 0;
 		return -1;
 	}
 
-	struct dirent nextdir;
+	struct dirent *nextDir;
 	while((nextDir=readdir(currDir))!=NULL)
 	{
-		if(strcmp(nextDir.d_name, ".")||strcmp(nextDir.d_name, "..")
-			createArchive(file, nextDir.d_name, verbose, strict);
+		if(strcmp(nextDir->d_name, ".")||strcmp(nextDir->d_name, "..")) {
+			char pathBuff[256] = {0};
+			strcpy(pathBuff, path);
+			if (strlen(path) + strlen(nextDir->d_name) <= 255) {
+				strcat(pathBuff, nextDir->d_name);
+			} else {
+				perror("path name must be shorter than 256 characters\n");
+                		return -1;
+			}
+			createArchive(file, pathBuff, verbose, strict);
+		}
 	}
 	
 
@@ -204,8 +216,4 @@ int prefix(char *path) {
 	}
 	return lastIndex;
 }
-
-
-void zeroPad(char buff[], 
-
 
