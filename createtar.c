@@ -9,6 +9,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <arpa/inet.h>
 #include "createtar.h"
 #include "mytar.h"
 #define VERBOSE 0
@@ -46,34 +47,74 @@ int createArchive(int file, char *path, int verbose, int strict)
 
 	/*write octal permissions into a buffer and then write to block*/
 	char modeBuff[8];
+	char modeTestBuff[10];
 	int mode = fileStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
-	snprintf(modeBuff, 8, "%07o", mode);
-	strcpy((char*)header->mode, modeBuff);
+	snprintf(modeTestBuff, 10, "%o", mode);
+	int bufflen = strlen(modeTestBuff);
+	if (bufflen > 7) {
+		if (insert_special_int((char*)header->mode, 8, mode) != 0)
+			printf("error inserting special int\n");	
+	} else {
+		snprintf(modeBuff, 8, "%07o", mode);
+        	strcpy((char*)header->mode, modeBuff);
+	}
 
 	/*write octal uid into buffer then write to block*/
 	char uidBuff[8];
+	char uidTestBuff[10];
 	int uid = fileStats.st_uid;
-	snprintf(uidBuff, 8, "%07o", uid);
-	strcpy((char*)header->uid, uidBuff);
-
+	snprintf(uidTestBuff, 10, "%o", uid);
+	int uidlen = strlen(uidTestBuff);
+	if (uidlen > 7) {
+		if (insert_special_int((char*)header->uid, 8, uid) != 0) 
+                        printf("error inserting special int\n");
+	} else {
+		snprintf(uidBuff, 8, "%07o", uid);
+        	strcpy((char*)header->uid, uidBuff);
+	}
+	
 	/*write octal gid """"" */
 	char gidBuff[8];
+	char gidTestBuff[10];
 	int gid = fileStats.st_gid;
-	snprintf(gidBuff, 8, "%07o", gid);
-	strcpy((char*)header->gid, gidBuff);
+	snprintf(gidTestBuff, 10, "%o", gid);
+	int gidlen = strlen(gidTestBuff);
+	if (gidlen > 7) {
+		if (insert_special_int((char*)header->gid, 8, gid) != 0) 
+                        printf("error inserting special int\n");
+	} else {
+		snprintf(gidBuff, 8, "%07o", gid);
+        	strcpy((char*)header->gid, gidBuff);
+	}
 
 	/*to conform with return value of snprintf above, size is bytes written to the buff and file_size is the number of bytes in the file. write octal file size to block*/
 
 	char fileSizeBuff[12];
+	char fileSizeTestBuff[14];
 	int fileSize = fileStats.st_size;
-	snprintf(fileSizeBuff, 12, "%011o", fileSize);
-	strcpy((char*)header->size, fileSizeBuff);
+	snprintf(fileSizeTestBuff, 14, "%o", fileSize);
+	int filesizelen = strlen(fileSizeTestBuff);
+	if (filesizelen > 11) {
+		if (insert_special_int((char*)header->size, 12, fileSize) != 0) 
+                        printf("error inserting special int\n");
+	} else {
+		snprintf(fileSizeBuff, 12, "%011o", fileSize);
+        	strcpy((char*)header->size, fileSizeBuff);
+	}
 	
 	/*write octal mtime to block*/
 	char mtimeBuff[12];
+	char mtimeTestBuff[14];
 	int mtime = fileStats.st_mtime;
-	snprintf(mtimeBuff, 12, "%0o", mtime);
-	strcpy((char*)header->mtime, mtimeBuff);
+	snprintf(mtimeTestBuff, 14, "%o", mtime);
+	int mtimelen = strlen(mtimeTestBuff);
+	if (mtimelen > 11) {
+		if (insert_special_int((char*)header->mtime, 12, mtime) != 0) 
+                        printf("error inserting special int\n");
+	} else {
+		snprintf(mtimeBuff, 12, "%0o", mtime);
+        	strcpy((char*)header->mtime, mtimeBuff);
+	}
 
 	/*see chksum filled in at the end, depends on all other fields being completed*/
 	
@@ -118,16 +159,16 @@ int createArchive(int file, char *path, int verbose, int strict)
 	strcpy((char*)header->gname, gnameBuff);
 
 	/*writes devmajor to a buff then to the block*/
-	char devMajorBuff[8];
+/*	char devMajorBuff[8];
 	int devMajor = major(fileStats.st_dev);
-	snprintf(devMajorBuff, 8, "%o", devMajor);
-	strcpy((char*)header->devmajor, devMajorBuff);
+	snprintf(devMajorBuff, 8, "%07o", devMajor);
+	strcpy((char*)header->devmajor, devMajorBuff); */
 
 	/*writes devminor to a buff then to the block*/
-	char devMinorBuff[8];
+/*	char devMinorBuff[8];
 	int devMinor = minor(fileStats.st_dev);
-	snprintf(devMinorBuff, 8, "%o", devMinor);
-	strcpy((char*)header->devminor, devMinorBuff);
+	snprintf(devMinorBuff, 8, "%07o", devMinor);
+	strcpy((char*)header->devminor, devMinorBuff); */
 
 	/*adds up every uint8_t in the block and places the result in chksum*/
 	int i;
@@ -217,3 +258,16 @@ int prefix(char *path) {
 	return lastIndex;
 }
 
+
+/*places binary integer version of number if octal string too large*/
+int insert_special_int(char *where, size_t size, int32_t val) { 
+	int err=0;
+	if(val<0||(size<sizeof(val)) ){
+		err++;
+	} else {
+		memset(where, 0, size);
+		*(int32_t *)(where+size-sizeof(val)) = htonl(val);
+		*where |= 0x80;
+	}
+	return err; 
+}
