@@ -2,6 +2,7 @@
 #define MYTAR_H
 
 #include <sys/types.h>
+#include <dirent.h>
 #include <utime.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -22,6 +23,7 @@ block *makeBlock();
 block *resetBlock(block *old);
 metaData *makeMetaData();
 metaData *updateMetaData(metaData *myMD, block *header);
+DIR *makePath(char *path);
 
 struct blockStruct
 {
@@ -48,7 +50,7 @@ struct blockStruct
 
 struct metaDataStruct
 {
-	char name[256];
+	char name[257];
         mode_t mode;
         long int uid;
         long int gid;
