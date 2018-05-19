@@ -13,19 +13,17 @@
 
 int main(int argc, char** argv)
 {
-	uint8_t flags[6]; /*[c, t, x, v, f, S]*/
+	uint8_t flags[6]={0}; /*[c, t, x, v, f, S]*/
 	int i;
 	int ch;
 	int pathindex=2;
 	int file=STDOUT_FILENO;
 	
+	printf("before anything else\n");
 	
-	for(i=0; i<6; i++)
-		flags[i]=0;
-
 	if(argc>=3)
 	{
-	
+		printf("at least three args\n");
 		/*parse all of the give flags*/
 		i=0;
 		while((ch=argv[1][i++])!='\0')
@@ -81,7 +79,8 @@ int main(int argc, char** argv)
 			return -1;
 		}
 */
-		
+		printf("what function should i call\n");
+		fflush(stdout);
 		/* see what function I'll need to callf from here*/
                 if(flags[0] ^  flags[1] ^ flags[2])
                 {
@@ -105,7 +104,8 @@ int main(int argc, char** argv)
 					return 0;         	
 	
 				while(pathindex<argc)
-				{
+				{	
+					break;
 					if(createArchive(file, argv[pathindex], flags[3], flags[5])<0)
 					{
 						close(file);
@@ -126,7 +126,7 @@ int main(int argc, char** argv)
                                         pathindex++;
                                         if((file=open(argv[2], O_RDONLY, 0666))<0)
                                         {
-                                                perror("list archive open f");
+                                                printUsage();
                                                 return -1;
                                         }
                                 }
@@ -160,19 +160,21 @@ int main(int argc, char** argv)
 			/*extractArchive*/
 			else if(flags[2])
 			{
+				printf("about to open the extract file\n");
 				if(flags[4])
                                 {
                                         pathindex++;
                                         if((file=open(argv[2], O_RDONLY, 0666))<0)
                                         {
-                                                perror("extract archive open f");
+                                                printUsage();
                                                 return -1;
                                         }
                                 }
 
                                 /*no path was provided, print everything*/
-                                if(pathindex==argc)
+				if(pathindex==argc)
                                 {
+					printf("main: no path provided, extract all\n");
                                         if(extractArchive(file, "", flags[3], flags[5])<0 && errno)
                                         {
                                                 close(file);
@@ -180,9 +182,11 @@ int main(int argc, char** argv)
                                                 return -1;
                                         }
                           	}
-
+				
 				while(pathindex<argc)
-                                {	
+                                {
+					lseek(file, 0, SEEK_SET);
+					printf("main: looping through all paths to extract\n");	
                 			if(extractArchive(file, argv[pathindex], flags[3], flags[5])<0)
                                         {       
 						close(file);
@@ -274,14 +278,31 @@ metaData *updateMetaData(metaData *myMD, block *header)
 	char buffer[33];
 		
         memset(myMD, 0, sizeof(metaData));
+	
+	if(strlen((char *)header->prefix))
+	{
+		printf("there is a prefix\n");
+        	if(strncpy((char *)myMD->name, (char *)header->prefix, 155)==NULL || 
+			strcat((char *)myMD->name, "/")==NULL)
+		{
+			free(myMD);
+			return NULL;
+		}
 
-        if(strcat((char *)myMD->name, (char *)header->prefix)==NULL ||
-           strcat((char *)myMD->name, (char *)header->name)==NULL)
-        {
-                free(myMD);
-                return NULL;
-        }
-
+		if(strncat((char *)myMD->name, (char *)header->name, 100)==NULL)
+        	{
+                	free(myMD);
+                	return NULL;
+        	}
+	}
+		
+	else if(strncpy(myMD->name, (char *)header->name, 100)==NULL)
+	{
+		printf("there isn't a prefix\n");
+		free(myMD);
+		return NULL;
+	}
+		
 	if(strcpy(buffer, (char *)header->mode)==NULL)
 	{
 		free(myMD);
@@ -313,3 +334,36 @@ metaData *updateMetaData(metaData *myMD, block *header)
 	
 	return myMD;
 }
+
+DIR *makePath(char *path)
+{
+	DIR *tempDir=NULL;
+	int i=0;
+	
+	while(path[i]!=0)
+	{
+		if(path[i]=='/')
+		{
+			if(tempDir)
+			{
+				closedir(tempDir);
+				tempDir=NULL;
+			}
+
+			path[i]=0;
+			printf("\tmakePath: %s\n", path);
+			if(mkdir(path, 0777)<0 &&  !(errno&EEXIST))
+				return -1;
+
+			tempDir=opendir(path);
+			
+			path[i]='/';
+		}
+		i++;	
+        }
+	
+	return tempDir;
+}
+
+
+
