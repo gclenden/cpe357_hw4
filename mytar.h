@@ -58,7 +58,8 @@ struct metaDataStruct
        	time_t mtime;
         uint8_t *chksum;
         uint8_t *typeflag;
-        uint8_t linkname[101];
+        char * linkname[101];
+	char * fulllinkname[257];
         uint8_t *magic;
         uint8_t *version;
         uint8_t *uname;
