@@ -14,6 +14,6 @@
 #include <pwd.h>
 #include <grp.h>
 
-int listArchive(int file, char *path, int verbose, int strict);
+int listArchive(int file, char **argv, int argc, int pathindex, int verbose, int strict);
 
 #endif

@@ -99,14 +99,14 @@ int main(int argc, char** argv)
 					return 0;         	
 	
 				while(pathindex<argc)
-				{	
+				{		
 					if(createArchive(file, argv[pathindex], flags[3], flags[5])<0)
 					{
 						close(file);
 						perror("createArchive");
 						return -1;
 					}
-				
+					
 					pathindex++;
 				}
 			
@@ -132,7 +132,7 @@ int main(int argc, char** argv)
                                 /*no path was provided, print everything*/
                                 if(pathindex==argc)
                                 {
-				        if(listArchive(file, "", flags[3], flags[5])<0)
+				        if(listArchive(file, NULL, 0, 0, flags[3], flags[5])<0)
                                         {       
                                                 close(file);
                                                 perror("listArchive");
@@ -140,26 +140,17 @@ int main(int argc, char** argv)
                                         }
 				}
 
-				else
-				{	while(pathindex<argc)
-                                	{
-						lseek(file, 0, SEEK_SET);
-						if(listArchive(file, argv[pathindex], flags[3], flags[5])<0)
-	                                        {       
-							close(file);
-	                                                perror("listArchive");
-	                                                return -1;
-	                                        }
-	
-	                                        pathindex++;
-	                                }
+				else if(listArchive(file, argv, argc, pathindex, flags[3], flags[5])<0)
+	                        {       
+					close(file);
+	                                perror("listArchive");
+	                                return -1;
 				}
 			}
 
 			/*extractArchive*/
 			else if(flags[2])
 			{
-				printf("about to open the extract file\n");
 				if(flags[4])
                                 {
                                         pathindex++;
@@ -173,8 +164,7 @@ int main(int argc, char** argv)
                                 /*no path was provided, print everything*/
 				if(pathindex==argc)
                                 {
-					printf("main: no path provided, extract all\n");
-                                        if(extractArchive(file, "", flags[3], flags[5])<0 && errno)
+                                        if(extractArchive(file, NULL, 0, 0, flags[3], flags[5])<0 && errno)
                                         {
                                                 close(file);
                                                 perror("extractArchive");
@@ -182,20 +172,12 @@ int main(int argc, char** argv)
                                         }
                           	}
 				
-				while(pathindex<argc)
-                                {
-					lseek(file, 0, SEEK_SET);
-					printf("main: looping through all paths to extract\n");	
-                			if(extractArchive(file, argv[pathindex], flags[3], flags[5])<0)
-                                        {       
-						close(file);
-                                                perror("extractArchive");
-                                                return -1;
-                                        }
-
-                                        pathindex++;
+				else if(extractArchive(file, argv, argc, pathindex, flags[3], flags[5])<0)
+                                {       
+					close(file);
+                                        perror("extractArchive");
+                                        return -1;
                                 }
-
 			}
 		}
 
@@ -331,6 +313,12 @@ metaData *updateMetaData(metaData *myMD, block *header)
 
 	myMD->mtime=strtoll(buffer, NULL, 8);
 	
+	if(strncpy((char *)myMD->linkname, (char *)header -> linkname, 100)==NULL)
+	{
+		free(myMD);
+		return NULL;
+	}
+	
 	if(header->linkname[0]=='/' && strncpy((char *)myMD->fulllinkname, (char *)header->linkname, 100)==NULL)
 	{
 		free(myMD);
@@ -345,9 +333,10 @@ metaData *updateMetaData(metaData *myMD, block *header)
 				pathlen=i;
 
 			i++;
-		}
+		}	
 
 		if(strncpy((char *)myMD->fulllinkname, (char *)myMD->name, pathlen)==NULL
+			|| strcat((char *)myMD->fulllinkname, "/")==NULL
 			|| strncat((char *)myMD->fulllinkname, (char *)header->linkname, 100) == NULL)
 		{
 			free(myMD);
@@ -358,27 +347,17 @@ metaData *updateMetaData(metaData *myMD, block *header)
 	return myMD;
 }
 
-DIR *makePath(char *path)
+int makePath(char *path)
 {
-	DIR *tempDir=NULL;
 	int i=0;
 	
 	while(path[i]!=0)
 	{
 		if(path[i]=='/')
 		{
-			if(tempDir)
-			{
-				closedir(tempDir);
-				tempDir=NULL;
-			}
-
 			path[i]=0;
-			printf("\tmakePath: %s\n", path);
 			if(mkdir(path, 0777)<0 &&  !(errno&EEXIST))
-				return NULL;
-
-			tempDir=opendir(path);
+				return -1;
 			
 			path[i]='/';
 		}
@@ -386,12 +365,12 @@ DIR *makePath(char *path)
 		i++;	
         }
 	
-	return tempDir;
+	return 0;
 }
 
 int checkHeader(block *myBlock, int strict)
 {
-	if(strncmp(myBlock->magic, "ustar", 5)==0)
+	if(strncmp((char *)myBlock->magic, "ustar", 5)==0)
 	{
 		if(!strict)
 			return 0;
