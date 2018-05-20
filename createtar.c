@@ -20,12 +20,19 @@ int createArchive(int file, char *path, int verbose, int strict)
         printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
 	
 	if (strlen(path) > 256) {
-		perror("path name must be shorter than 256 characters\n");
+		perror("Path name must be shorter than 256 characters\n");
 		return -1;
 	}
+	
+	
 
 	block *header = makeBlock();
-	int fd = open(path, O_RDONLY);
+	int fd;
+	if ((fd = open(path, O_RDONLY)) < 0) {
+		perror("File Nonexistant");
+		return 0;
+	}
+		
 
 	struct stat fileStats;
 	if (stat(path, &fileStats) < 0) {
@@ -201,16 +208,11 @@ int createArchive(int file, char *path, int verbose, int strict)
 	write(file, &(header->data), 512);
 
 	/*write contents of old file to new file*/
-	uint8_t byte;
 	block *bodyBuff = resetBlock(header);	
-	int index = 0;
-	while (read(fd, &byte, 1) != 0) {
-		bodyBuff->data[index++] = byte;
-		if (index == 512) {
-			write(file, &(bodyBuff->data), 512);
-			index = 0;
-			bodyBuff = resetBlock(bodyBuff);
-		}
+	while (read(fd, &(bodyBuff->data), 512) > 0) {
+		printf("printing block\n");
+		write(file, &(bodyBuff->data), 512);
+		bodyBuff = resetBlock(bodyBuff);
 	}
 	write(file, &(bodyBuff->data), 512);
 	DIR *currDir;	
@@ -224,6 +226,7 @@ int createArchive(int file, char *path, int verbose, int strict)
 	struct dirent *nextDir;
 	while((nextDir=readdir(currDir))!=NULL)
 	{
+		
 		if(strcmp(nextDir->d_name, ".")||strcmp(nextDir->d_name, "..")) {
 			char pathBuff[256] = {0};
 			strcpy(pathBuff, path);
@@ -233,6 +236,7 @@ int createArchive(int file, char *path, int verbose, int strict)
 				perror("path name must be shorter than 256 characters\n");
                 		return -1;
 			}
+			printf("recursing/n");
 			createArchive(file, pathBuff, verbose, strict);
 		}
 	}
