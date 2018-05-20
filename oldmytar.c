@@ -19,8 +19,11 @@ int main(int argc, char** argv)
 	int pathindex=2;
 	int file=STDOUT_FILENO;
 	
+	printf("before anything else\n");
+	
 	if(argc>=3)
 	{
+		printf("at least three args\n");
 		/*parse all of the give flags*/
 		i=0;
 		while((ch=argv[1][i++])!='\0')
@@ -76,6 +79,8 @@ int main(int argc, char** argv)
 			return -1;
 		}
 */
+		printf("what function should i call\n");
+		fflush(stdout);
 		/* see what function I'll need to callf from here*/
                 if(flags[0] ^  flags[1] ^ flags[2])
                 {
@@ -115,12 +120,12 @@ int main(int argc, char** argv)
 			/*listArchive*/
 			else if(flags[1])
 			{
+
 				if(flags[4])
                                 {
                                         pathindex++;
                                         if((file=open(argv[2], O_RDONLY, 0666))<0)
                                         {
-						printf("couldn't open the file\n");
                                                 printUsage();
                                                 return -1;
                                         }
@@ -140,7 +145,6 @@ int main(int argc, char** argv)
 				else
 				{	while(pathindex<argc)
                                 	{
-						lseek(file, 0, SEEK_SET);
 						if(listArchive(file, argv[pathindex], flags[3], flags[5])<0)
 	                                        {       
 							close(file);
@@ -272,13 +276,12 @@ metaData *makeMetaData(block *myBlock)
 metaData *updateMetaData(metaData *myMD, block *header)
 {
 	char buffer[33];
-	int i=0;	
-	int pathlen=0;
 		
         memset(myMD, 0, sizeof(metaData));
 	
 	if(strlen((char *)header->prefix))
 	{
+		printf("there is a prefix\n");
         	if(strncpy((char *)myMD->name, (char *)header->prefix, 155)==NULL || 
 			strcat((char *)myMD->name, "/")==NULL)
 		{
@@ -295,6 +298,7 @@ metaData *updateMetaData(metaData *myMD, block *header)
 		
 	else if(strncpy(myMD->name, (char *)header->name, 100)==NULL)
 	{
+		printf("there isn't a prefix\n");
 		free(myMD);
 		return NULL;
 	}
@@ -306,7 +310,7 @@ metaData *updateMetaData(metaData *myMD, block *header)
 	}
 	
 	/*check for an execute permissions*/
-	if(((buffer[4]-'0')%2)||((buffer[4]-'0')%2)||((buffer[6]-'0')%2))
+	if(((buffer[2]-'0')%2)||((buffer[3]-'0')%2)||((buffer[4]-'0')%2))
 		myMD->mode=0777;
 	
 	else
@@ -326,32 +330,8 @@ metaData *updateMetaData(metaData *myMD, block *header)
                 return NULL;
         }
 
-	myMD->mtime=strtoll(buffer, NULL, 8);
+	myMD->mtime=strtol(buffer, NULL, 8);
 	
-	if(header->linkname[0]=='/' && strncpy((char *)myMD->fulllinkname, (char *)header->linkname, 100)==NULL)
-	{
-		free(myMD);
-		return NULL;
-	}
-
-	else 
-	{
-		while(myMD->name[i]!='\0' && i<256)
-		{
-			if(myMD->name[i]=='/')
-				pathlen=i;
-
-			i++;
-		}
-
-		if(strncpy((char *)myMD->fulllinkname, (char *)myMD->name, pathlen)==NULL
-			|| strncat((char *)myMD->fulllinkname, (char *)header->linkname, 100) == NULL)
-		{
-			free(myMD);
-			return NULL;
-		}
-		
-	}	
 	return myMD;
 }
 
@@ -373,16 +353,17 @@ DIR *makePath(char *path)
 			path[i]=0;
 			printf("\tmakePath: %s\n", path);
 			if(mkdir(path, 0777)<0 &&  !(errno&EEXIST))
-				return NULL;
+				return -1;
 
 			tempDir=opendir(path);
 			
 			path[i]='/';
 		}
-		
 		i++;	
         }
 	
 	return tempDir;
 }
+
+
 

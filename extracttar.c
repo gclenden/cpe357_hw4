@@ -12,7 +12,7 @@ int extractArchive(int file, char *path, int verbose, int strict)
 	int nextheader = 0;
 	block *newBlock = NULL;
 	metaData *newMetaData = NULL;
-	uint8_t buffer[32];
+	uint8_t fullLink[257];
 	int i;		
 	int newFile=-1;
 	int eoa = 0;
@@ -33,7 +33,7 @@ int extractArchive(int file, char *path, int verbose, int strict)
 	
 	while(read(file, newBlock->data, 512)>0)
 	{
-		memset(buffer, 0, 32);
+		memset(fullLink, 0, sizeof(fullLink));
 /*
 		for(i=0; i<256; i++)
                 	fullName[i]=0;
@@ -113,7 +113,7 @@ int extractArchive(int file, char *path, int verbose, int strict)
 				printf("%s\n", newMetaData->name);
 
 			newDir = makePath(newMetaData->name);
-			printf("newDir: %p", (void *)newDir);
+			printf("newDir: %p\n", (void *)newDir);
 			fflush(stdout);
 			/*makePath(path);*/
 
@@ -135,9 +135,11 @@ int extractArchive(int file, char *path, int verbose, int strict)
 				case '2':
 					printf("making a new symlink -- linkname: %s\n", newBlock->linkname);
 					/*makePath((char *)newBlock->linkname);
-					
-					*/newFile=dirfd(newDir);
-					if(symlinkat(newMetaData->name, newFile, (char *)newBlock->linkname)<0 && (errno!=EEXIST))
+				
+					*/
+				
+					newFile=dirfd(newDir);
+					if(symlinkat(newMetaData->name, newFile, (char *)newMetaData->fulllinkname)<0 && (errno!=EEXIST))
 					{
 						printf("failed to make symlink");
 						free(newMetaData);
@@ -146,17 +148,17 @@ int extractArchive(int file, char *path, int verbose, int strict)
 					}
 	
 					newFile=-1;
-
+					
 					printf("making a new file at the symlink\n");
                                         /*the header is for a file*/
-                                        if((newFile=open((char *)newMetaData->name, O_WRONLY | O_TRUNC |
+                                        /*if((newFile=open((char *)newMetaData->name, O_WRONLY | O_TRUNC |
                                                                 O_CREAT, newMetaData->mode))<0)
                                         {
                                                 free(newBlock);
                                                 free(newMetaData);
                                                 return -1;
                                         }
-	
+					*/
 					
 
 					break;
@@ -248,22 +250,4 @@ int extractArchive(int file, char *path, int verbose, int strict)
 	free(newMetaData);
 	free(newBlock);
 	return 0;
-}		
-
-int power(int num, int power)
-{
-	int temp=0;
-
-	while(power--)
-	{
-		if(temp==0)
-			temp=1;
-		
-		else
-			temp*=num;
-	}
-
-	return temp;
-}
-
-	
+}			
