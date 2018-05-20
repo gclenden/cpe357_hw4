@@ -5,6 +5,6 @@
 #include <sys/stat.h>
 #include "mytar.h"
 
-int extractArchive(int file, char *path, int verbose, int strict);
-int power(int, int);
+int extractArchive(int file, char **argv, int argc, int pathindex, int verbose, int strict);
+
 #endif

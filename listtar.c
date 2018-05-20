@@ -27,8 +27,6 @@ int listArchive(int file, char **argv, int argc, int pathindex, int verbose, int
 		return -1;
 	}
 
-	/*printf("pathlen: %i -- path: %s\n", pathlen, path);
-	*/
 	while(read(file, newBlock->data, 512)>0)
 	{
 		if(nextheader == 0)
@@ -99,14 +97,6 @@ int listArchive(int file, char **argv, int argc, int pathindex, int verbose, int
 				printf("%s\n", newMetaData->name);
 				continue;
 			}
-
-			/*makePath(path);
-
-			if (!verbose) 
-			{
-
-	               		 printf("%s\n", newMetaData->name);
-			}*/
 	
 			/*the paths match, extract this entry*/
 			switch(*(newBlock->typeflag))
@@ -170,25 +160,8 @@ int listArchive(int file, char **argv, int argc, int pathindex, int verbose, int
 	
 				}	
 			}
-			
-			/*
-			printf( (buffer[5] & S_IRUSR) ? "r" : "-");
-	                printf( (buffer[5] & S_IWUSR) ? "w" : "-");
-	                printf( (buffer[5] & S_IXUSR) ? "x" : "-");
-	                printf( (buffer[6] & S_IRGRP) ? "r" : "-");
-	                printf( (buffer[6] & S_IWGRP) ? "w" : "-");
-	                printf( (buffer[6] & S_IXGRP) ? "x" : "-");
-	                printf( (buffer[7] & S_IROTH) ? "r" : "-");
-	                printf( (buffer[7] & S_IWOTH) ? "w" : "-");
-	                printf( (buffer[7] & S_IXOTH) ? "x " : "- ");
-			  */    
-			/*printf("\t%s/%s", newBlock->uname, newBlock->gname);
-			*/
-			/*print userID/groupID, left aligned in size of 17*/
-	                /*printf("%-17s ", names);
-			*/
+		
                 	/*print size of file, right aligned in size of 8*/
-     
 			char names[66];
 			memset(names, 0, sizeof(names));
 
@@ -207,10 +180,9 @@ int listArchive(int file, char **argv, int argc, int pathindex, int verbose, int
 			struct tm *info=NULL;
 
 
-                	/*print year of last modification*/
+                	/*print formatted time of last modification*/
              
-                	/*time_t modified = fileStats.st_mtime;*/
-                	char buff[267];
+                      	char buff[267];
 			memset(buff, 0, sizeof(buff));
 
 			time_t mod = (time_t)newMetaData->mtime;
@@ -233,71 +205,3 @@ int listArchive(int file, char **argv, int argc, int pathindex, int verbose, int
 	return 0;
 }		
 
-int power(int num, int power)
-{
-	int temp=0;
-
-	while(power--)
-	{
-		if(temp==0)
-			temp=1;
-		
-		else
-			temp*=num;
-	}
-
-	return temp;
-}
-
-void list(char *fileName, int verbose) {
-
-	block *newBlock=NULL;
-	metaData *newMetaData=NULL;
-
-        if (!verbose) {
-
-                /*print file name*/
-                printf("%s\n", newMetaData->name);
-
-        } else {
-
-                struct stat fileStats;
-                if (-1 == stat(fileName, &fileStats)) {
-                        printf("stat error\n");
-                }
-
-                /*print permissions of the file*/
-                printf( (S_ISDIR(fileStats.st_mode)) ? "d" : "-");
-                printf( (fileStats.st_mode & S_IRUSR) ? "r" : "-");
-                printf( (fileStats.st_mode & S_IWUSR) ? "w" : "-");
-                printf( (fileStats.st_mode & S_IXUSR) ? "x" : "-");
-                printf( (fileStats.st_mode & S_IRGRP) ? "r" : "-");
-                printf( (fileStats.st_mode & S_IWGRP) ? "w" : "-");
-                printf( (fileStats.st_mode & S_IXGRP) ? "x" : "-");
-                printf( (fileStats.st_mode & S_IROTH) ? "r" : "-");
-                printf( (fileStats.st_mode & S_IWOTH) ? "w" : "-");
-                printf( (fileStats.st_mode & S_IXOTH) ? "x " : "- ");
-
-		printf("\t%s/%s", newBlock->uid, newBlock->gid);    
-
-
-	        /*get userID, get groupID, strcat them together with a / in between*/
-
-                /*print userID/groupID, left aligned in size of 17*/
-  /*              printf("%-17s ", names);
-*/
-                /*print size of file, right aligned in size of 8*/
-                printf("%8ld ", fileStats.st_size);
-
-                /*print year of last modification*/
-                char buff[16];
-                time_t modified = fileStats.st_mtime;
-                strftime(buff, 20, "%Y-%m-%d %H:%M ", localtime(&modified));
-                printf("%16s ", buff);
-
-                /*print file name*/
-                printf("%s\n", fileName);
-
-        }
-}
-	

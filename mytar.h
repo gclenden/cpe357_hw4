@@ -21,7 +21,7 @@ block *makeBlock();
 block *resetBlock(block *old);
 metaData *makeMetaData();
 metaData *updateMetaData(metaData *myMD, block *header);
-DIR *makePath(char *path);
+int makePath(char *path);
 int checkHeader(block *myBlock, int strict);
 int argsort(const void *str1, const void *str2);
 
@@ -58,8 +58,8 @@ struct metaDataStruct
        	time_t mtime;
         uint8_t *chksum;
         uint8_t *typeflag;
-        char * linkname[101];
-	char * fulllinkname[257];
+        char linkname[101];
+	char fulllinkname[257];
         uint8_t *magic;
         uint8_t *version;
         uint8_t *uname;
