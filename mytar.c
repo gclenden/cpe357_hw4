@@ -100,7 +100,6 @@ int main(int argc, char** argv)
 	
 				while(pathindex<argc)
 				{	
-					break;
 					if(createArchive(file, argv[pathindex], flags[3], flags[5])<0)
 					{
 						close(file);
@@ -110,6 +109,10 @@ int main(int argc, char** argv)
 				
 					pathindex++;
 				}
+			
+				block *empty= makeBlock();
+				write(file, &(empty->data), 512);
+				write(file, &(empty->data), 512);
 			}
 		
 			/*listArchive*/
