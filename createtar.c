@@ -172,11 +172,12 @@ int createArchive(int file, char *path, int verbose, int strict)
 
 	/*adds up every uint8_t in the block and places the result in chksum*/
 	int i;
-	int sum;
+	int sum = 0;
 	for (i = 0; i < 512; i++) {
 		sum += header->data[i];
 	}
 	char chksumBuff[8];
+	sum += (' ' * 8);
 	snprintf(chksumBuff, 8, "%07o", sum);
 	strcpy((char*)header->chksum, chksumBuff);
 
