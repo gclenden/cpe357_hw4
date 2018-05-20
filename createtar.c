@@ -20,6 +20,7 @@ int createArchive(int file, char *path, int verbose, int strict)
         printf("createArchive -- path:%s -- verbose:%i -- strict: %i\n", path, verbose, strict);
 	
 	if (strlen(path) > 256) {
+		fflush(stdout);
 		perror("Path name must be shorter than 256 characters\n");
 		return -1;
 	}
@@ -29,6 +30,7 @@ int createArchive(int file, char *path, int verbose, int strict)
 	block *header = makeBlock();
 	int fd;
 	if ((fd = open(path, O_RDONLY)) < 0) {
+		fflush(stdout);
 		perror("File Nonexistant");
 		return 0;
 	}
@@ -36,19 +38,22 @@ int createArchive(int file, char *path, int verbose, int strict)
 
 	struct stat fileStats;
 	if (stat(path, &fileStats) < 0) {
+		fflush(stdout);
 		perror("error in stat buffering\n");
 		exit(-1);
 	}
 	
 	/*check size of file path name, and store name and prefix (if necessary)*/
+	fflush(stdout);
 	int split = prefix(path);
+	fflush(stdout);
 	if (split == -1) {
 		strcpy((char*)header->name, path);
 		if (S_ISDIR(fileStats.st_mode)) {
 			header->name[strlen(path)] = '/';
 		}
 	} else {
-		strncpy((char*)header->prefix, path, split - 1);
+		strncpy((char*)header->prefix, path, split);
 		char *name = &(path[split + 1]);
 		strcpy((char*)header->name, name);
 		if (S_ISDIR(fileStats.st_mode)) {
@@ -56,7 +61,6 @@ int createArchive(int file, char *path, int verbose, int strict)
 		}
 	}
 
-	printf("%s\n", (char*) header->name);
 
 	/*write octal permissions into a buffer and then write to block*/
 	char modeBuff[8];
@@ -176,18 +180,6 @@ int createArchive(int file, char *path, int verbose, int strict)
 	gnameBuff[32] = '\0';
 	strcpy((char*)header->gname, gnameBuff);
 
-	/*writes devmajor to a buff then to the block*/
-/*	char devMajorBuff[8];
-	int devMajor = major(fileStats.st_dev);
-	snprintf(devMajorBuff, 8, "%07o", devMajor);
-	strcpy((char*)header->devmajor, devMajorBuff); */
-
-	/*writes devminor to a buff then to the block*/
-/*	char devMinorBuff[8];
-	int devMinor = minor(fileStats.st_dev);
-	snprintf(devMinorBuff, 8, "%07o", devMinor);
-	strcpy((char*)header->devminor, devMinorBuff); */
-
 	/*adds up every uint8_t in the block and places the result in chksum*/
 	int i;
 	int sum = 0;
@@ -199,21 +191,6 @@ int createArchive(int file, char *path, int verbose, int strict)
 	snprintf(chksumBuff, 8, "%07o", sum);
 	strcpy((char*)header->chksum, chksumBuff);
 
-/*	printf("name: %s\n", header->name);
-	printf("mode: %s\n", header->mode);
-	printf("uid: %s\n", header->uid);
-	printf("gid: %s\n", header->gid);
-	printf("mtime: %s\n", header->mtime);
-        printf("chksum: %s\n", header->chksum);
-        printf("typeflag: %c\n",*(header->typeflag));
-        printf("linkname: %s\n", header->linkname);
-        printf("magic: %s\n", header->magic);
-	printf("verision: %c%c\n", header->version[0], header->version[1]);
-        printf("uname: %s\n", header->uname);
-        printf("gname: %s\n", header->gname);
-	printf("devmajor:  %s\n", header->devmajor);
-	printf("devminor:  %s\n", header->devminor);
-        printf("prefix: %s\n", header->prefix); */
 
 	/*write the header to new file*/
 	write(file, &(header->data), 512);
@@ -241,21 +218,13 @@ int createArchive(int file, char *path, int verbose, int strict)
 			strcpy(pathBuff, path);
 			pathBuff[strlen(path)] = '/';
 			if (strlen(path) + strlen(nextDir->d_name) <= 255) {
-			/*	printf("cat-ing name to path\n");*/
 				strcat(pathBuff, nextDir->d_name);
 			} else {
-			/*	perror("path name must be shorter than 256 characters\n");*/
+				perror("path name must be shorter than 256 characters\n");
                 		return -1;
 			}
-			/*int pathLen = strlen(path);
-			int fileLen = strlen(nextDir->d_name);
-			char *newPath = (char*) malloc(pathLen+fileLen+1);
-			strcpy(newPath, path);
-			strcat(newPath, nextDir->d_name); 
-			printf("new path name: %s\n", pathBuff);
-			printf("recursing\n");*/
 			createArchive(file, pathBuff, verbose, strict);
-			/*free(newPath);*/
+			
 		}
 	}
 	
@@ -268,14 +237,15 @@ int createArchive(int file, char *path, int verbose, int strict)
 int prefix(char *path) {
 	int len = strlen(path);
 	int lastIndex = -1;
-	if (len <= 99) {
+	if (len <= 100) {
 		return -1;
 	} else {
 		int index = 0;
 		while (lastIndex == -1) {
-			if (path[index] == '/' && (len - index <= 99)) {
+			if (path[index] == '/' && (len - index <= 100)) {
 				lastIndex = index;
 			}
+			index++;
 		}
 	}
 	return lastIndex;
