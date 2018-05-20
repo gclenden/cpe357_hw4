@@ -389,3 +389,17 @@ DIR *makePath(char *path)
 	return tempDir;
 }
 
+int checkHeader(block *myBlock, int strict)
+{
+	if(strncmp(myBlock->magic, "ustar", 5)==0)
+	{
+		if(!strict)
+			return 0;
+	
+		else if(myBlock->magic[5]==0 && myBlock->version[0]=='0' && myBlock->version[1]=='0')
+			return 0;
+	}
+
+	return -1;
+}
+
