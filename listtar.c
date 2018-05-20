@@ -57,6 +57,14 @@ int listArchive(int file, char *path, int verbose, int strict)
 					continue;
 			}
 
+			if(checkHeader(newBlock, strict)<0)
+			{
+				free(newBlock);
+				free(newMetaData);
+				fprintf(stderr, "invalid header: terminating listing\n");
+				return 0;
+			}
+
 			if(updateMetaData(newMetaData, newBlock)==NULL)
 			{
 				free(newMetaData);

@@ -81,6 +81,13 @@ int extractArchive(int file, char *path, int verbose, int strict)
 					continue;
 			}
 
+			if(checkHeader(newBlock, strict)<0)
+			{
+				free(newMetaData);
+				free(newBlock);
+				fprintf(stderr, "invalid header, ending extract\n");
+				return 0;
+			}
 			if(updateMetaData(newMetaData, newBlock)==NULL)
 			{
 				free(newMetaData);

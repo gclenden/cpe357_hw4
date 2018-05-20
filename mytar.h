@@ -24,6 +24,7 @@ block *resetBlock(block *old);
 metaData *makeMetaData();
 metaData *updateMetaData(metaData *myMD, block *header);
 DIR *makePath(char *path);
+int checkHeaer(block *myBlock, int strict);
 
 struct blockStruct
 {
