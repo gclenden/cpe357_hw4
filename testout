@@ -1,0 +1,1729 @@
+~getaylor-grader/tryAsgn4
+
+------------------------
+Looking for source files
+------------------------
+
+Found: createtar.c createtar.h extracttar.c extracttar.h listtar.c listtar.h mytar.c mytar.h oldlisttar.c
+
+-----------------------
+Looking for a Makefile
+----------------------
+
+Found: Makefile
+
+--------------------------------
+Checking for long lines (no program should have any lines > 80 chars)
+(run ~pnico/bin/longlines.pl on your files to check.)
+--------------------------------
+
+Line length ok.
+
+Found: Makefile
+
+------------------------------------
+Building the application: "make mytar"
+------------------------------------
+
+make mytar
+make[1]: Entering directory `/home/gclenden/CPE357/hw4'
+gcc -Wall -std=gnu99 -g -c listtar.c
+gcc -Wall -std=gnu99 -g -o mytar mytar.o createtar.o listtar.o extracttar.o
+make[1]: Leaving directory `/home/gclenden/CPE357/hw4'
+
+---------------
+checking for executable
+---------------
+
+
+------------------------
+Running the application 
+------------------------
+
+
+-----------------Application tests-------------------------
+
+Test Results:
+   These are the results of trying your mytar against a
+small battery of tests that explores
+
+   1) Basic functionality,
+   2) Archive Creation,
+   3) Archive Listing, and
+   4) Archive Extraction.
+
+  This is not remotely complete.  Some items will still
+have to be checked by hand.
+
+  This script looks for error messages to appear on stderr
+as should be the case for all good unix applications.
+------------------------------------------------------------
+
+==============
+  General Tests:
+     1) no arguments                                 ... (probably) ok.
+     2) no C, T, or X                                ... (probably) ok.
+     3) f switch with no filename                    ... (probably) ok.
+     4) Trying to list a bad tarfile                 ... FAILURE.
+  Creation Tests:
+     5) One named file                               ... FAILURE.
+     6) One named binary file                        ... FAILURE.
+     7) Two Named Files                              ... FAILURE.
+     8) Three Named Files, one nonexistent           ... FAILURE.
+     9) Directory with children                      ... FAILURE.
+    10) Directory with grandchildren                 ... FAILURE.
+    11) Deep Tree, all in name                       ... FAILURE.
+    12) Deep Tree, moves into prefix                 ... FAILURE.
+  Listing Tests:
+    13) single text file, non-verbose                ... ok.
+    14) single binary file, non-verbose              ... ok.
+    15) single text file, verbose                    ... ok.
+    16) single binary file, verbose                  ... ok.
+    17) Two files in archive, non-verbose            ... ok.
+    18) Two files in archive, one named, non-verbose ... ok.
+    19) Two files in archive, verbose                ... ok.
+    20) Two files in archive, one named              ... ok.
+    21) List a deep tree, no prefix                  ... ok.
+    22) List a deep tree, no prefix, verbose         ... ok.
+    23) List named files, no prefix                  ... FAILURE.
+    24) List named files, no prefix, verbose         ... FAILURE.
+    25) List a deep tree, prefix                     ... ok.
+    26) List a deep tree, prefix, verbose            ... ok.
+    27) List a deep tree, named, prefix              ... FAILURE.
+    28) List a deep tree, prefix, named, verbose     ... FAILURE.
+    29) Named subtree, no prefix                     ... ok.
+    30) Named subtree, no prefix, verbose            ... ok.
+    31) Shallow Tree w/symlink                       ... ok.
+    32) Shallow Tree w/symlink, verbose              ... ok.
+    33) Shallow Tree w/different permissions         ... ok.
+    34) Shallow Tree w/different permissions, verbose... ok.
+  Extraction Tests:
+    35) single text file, non-verbose                ... ok.
+    36) single binary file, non-verbose              ... ok.
+    37) Two files in archive, non-verbose            ... ok.
+    38) Two files in archive, one named, non-verbose ... ok.
+    39) List a deep tree, no prefix                  ... ok.
+    40) List named files, no prefix                  ... ok.
+    41) List a deep tree, prefix                     ... ok.
+    42) List a deep tree, named, prefix              ... ok.
+    43) Named subtree, no prefix                     ... ok.
+    44) Shallow Tree w/symlink                       ... FAILURE.
+    45) Shallow Tree w/different permissions         ... ok.
+==============
+Passed 31 out of 45 tests.
+
+(3 out of 4 general/usage tests.)
+
+##########################
+# Test details are below #
+##########################
+
+
+==========================================
+1) General test: no arguments  ((probably) ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+    usage: mytar [ctxvS][f tarfile] [ path [ ... ] ]
+  --------------------------
+
+==========================================
+2) General test: no C, T, or X  ((probably) ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+    usage: mytar [ctxvS][f tarfile] [ path [ ... ] ]
+  --------------------------
+
+==========================================
+3) General test: f switch with no filename  ((probably) ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+    usage: mytar [ctxvS][f tarfile] [ path [ ... ] ]
+  --------------------------
+
+==========================================
+4) General test: Trying to list a bad tarfile  (FAILURE)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    ^?ELF^B^A^A
+    /lib64/ld-linux-x86-64.so.2
+    
+    ^B/
+    M-^R^B
+    
+    ^F/
+    M-C^C
+    
+    ^A/
+    9e/^W^B
+    ^ZtM-w/M-pUB
+    8}M-6M-^I>
+    7@/^A
+    
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+5) Creation test: One named file  (FAILURE)
+==========================================
+*** Archive size mismatch:
+      Submitted: 0
+      Reference: 2048
+  --------------------------
+  No listing for submitted's archive.
+  --------------------------
+
+==========================================
+6) Creation test: One named binary file  (FAILURE)
+==========================================
+*** Archive size mismatch:
+      Submitted: 0
+      Reference: 2048
+  --------------------------
+  No listing for submitted's archive.
+  --------------------------
+
+==========================================
+7) Creation test: Two Named Files  (FAILURE)
+==========================================
+*** Archive size mismatch:
+      Submitted: 0
+      Reference: 3072
+  --------------------------
+  No listing for submitted's archive.
+  --------------------------
+
+==========================================
+8) Creation test: Three Named Files, one nonexistent  (FAILURE)
+==========================================
+*** Archive size mismatch:
+      Submitted: 0
+      Reference: 3072
+  --------------------------
+  No listing for submitted's archive.
+  --------------------------
+
+==========================================
+9) Creation test: Directory with children  (FAILURE)
+==========================================
+*** Archive size mismatch:
+      Submitted: 0
+      Reference: 625152
+  --------------------------
+  No listing for submitted's archive.
+  --------------------------
+
+==========================================
+10) Creation test: Directory with grandchildren  (FAILURE)
+==========================================
+*** Archive size mismatch:
+      Submitted: 0
+      Reference: 1873920
+  --------------------------
+  No listing for submitted's archive.
+  --------------------------
+
+==========================================
+11) Creation test: Deep Tree, all in name  (FAILURE)
+==========================================
+*** Archive size mismatch:
+      Submitted: 0
+      Reference: 83968
+  --------------------------
+  No listing for submitted's archive.
+  --------------------------
+
+==========================================
+12) Creation test: Deep Tree, moves into prefix  (FAILURE)
+==========================================
+*** Archive size mismatch:
+      Submitted: 0
+      Reference: 84992
+  --------------------------
+  No listing for submitted's archive.
+  --------------------------
+
+==========================================
+13) Listing test: single text file, non-verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    JustAFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+14) Listing test: single binary file, non-verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    JustABinaryFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+15) Listing test: single text file, verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    -rw------- pnico/pnico            181 2010-12-09 18:46 JustAFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+16) Listing test: single binary file, verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    -rw------- pnico/pnico            128 2010-12-10 06:06 JustABinaryFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+17) Listing test: Two files in archive, non-verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    JustAFile
+    JustAnotherFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+18) Listing test: Two files in archive, one named, non-verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    JustAnotherFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+19) Listing test: Two files in archive, verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    -rw--w--w- pnico/pnico            181 2010-12-09 18:46 JustAFile
+    -rw------- pnico/pnico         283455 2010-12-10 09:24 JustAnotherFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+20) Listing test: Two files in archive, one named  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    -rw------- pnico/pnico         283455 2010-12-10 09:24 JustAnotherFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+21) Listing test: List a deep tree, no prefix  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    TreeNoPrefix/
+    TreeNoPrefix/Two/
+    TreeNoPrefix/Two/Five/
+    TreeNoPrefix/Two/Four/
+    TreeNoPrefix/Two/Six/
+    TreeNoPrefix/One/
+    TreeNoPrefix/One/Five/
+    TreeNoPrefix/One/Four/
+    TreeNoPrefix/One/Six/
+    TreeNoPrefix/Three/
+    TreeNoPrefix/Three/Five/
+    TreeNoPrefix/Three/Four/
+    TreeNoPrefix/Three/Six/
+    TreeNoPrefix/Deep/
+    TreeNoPrefix/Deep/Deeper/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-2
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-12
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-9
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-10
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-14
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-8
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-11
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-5
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-1
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-4
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-13
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-15
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-3
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-7
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd5
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd9
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd4
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd2
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd3
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd8
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd6
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd0
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd7
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd1
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+22) Listing test: List a deep tree, no prefix, verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    drwx------ pnico/pnico              0 2010-12-10 08:36 TreeNoPrefix/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/Two/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/Two/Five/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/Two/Four/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/Two/Six/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/One/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/One/Five/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/One/Four/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/One/Six/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/Three/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/Three/Five/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/Three/Four/
+    drwx------ pnico/pnico              0 2010-12-10 08:28 TreeNoPrefix/Three/Six/
+    drwx------ pnico/pnico              0 2010-12-10 08:29 TreeNoPrefix/Deep/
+    drwx------ pnico/pnico              0 2010-12-10 08:29 TreeNoPrefix/Deep/Deeper/
+    drwx------ pnico/pnico              0 2010-12-10 08:29 TreeNoPrefix/Deep/Deeper/EvenDeeper/
+    drwx------ pnico/pnico              0 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/
+    -r-------- pnico/pnico            506 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-2
+    -rw------- pnico/pnico          17106 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-12
+    -rw------- pnico/pnico           1056 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-9
+    -r-------- pnico/pnico           2643 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-10
+    -rw------- pnico/pnico            758 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-14
+    -rw------- pnico/pnico           3838 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-8
+    -r-------- pnico/pnico            188 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-11
+    -rw------- pnico/pnico          13756 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-5
+    -r-------- pnico/pnico           2660 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-1
+    -r-------- pnico/pnico            140 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-4
+    -rw------- pnico/pnico           2045 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-13
+    -r-------- pnico/pnico            336 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-15
+    -rw------- pnico/pnico           1697 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-3
+    -rw------- pnico/pnico           1293 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    -rw------- pnico/pnico           2269 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-7
+    drwx------ pnico/pnico              0 2010-12-10 08:29 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/
+    drwx------ pnico/pnico              0 2010-12-10 08:29 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/
+    drwx------ pnico/pnico              0 2010-12-10 11:17 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/
+    -rw------- pnico/pnico            179 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd5
+    -rw------- pnico/pnico            321 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd9
+    -rw------- pnico/pnico            431 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd4
+    -rw------- pnico/pnico            172 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd2
+    -rw------- pnico/pnico            258 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd3
+    -rw------- pnico/pnico            239 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd8
+    -rw------- pnico/pnico            164 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd6
+    -rw------- pnico/pnico            254 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd0
+    -rw------- pnico/pnico            347 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd7
+    -rw------- pnico/pnico            724 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd1
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+23) Listing test: List named files, no prefix  (FAILURE)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-13
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+  --------------------------
+  Differences ( < Submitted's > Reference):
+    1d0
+    < TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    2a2
+    > TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+  --------------------------
+
+==========================================
+24) Listing test: List named files, no prefix, verbose  (FAILURE)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    -rw------- pnico/pnico           1293 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    -rw------- pnico/pnico           2045 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-13
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+  --------------------------
+  Differences ( < Submitted's > Reference):
+    1d0
+    < -rw------- pnico/pnico           1293 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    2a2
+    > -rw------- pnico/pnico           1293 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+  --------------------------
+
+==========================================
+25) Listing test: List a deep tree, prefix  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    TreePrefix/
+    TreePrefix/Two/
+    TreePrefix/Two/Five/
+    TreePrefix/Two/Four/
+    TreePrefix/Two/Six/
+    TreePrefix/One/
+    TreePrefix/One/Five/
+    TreePrefix/One/Four/
+    TreePrefix/One/Six/
+    TreePrefix/Three/
+    TreePrefix/Three/Five/
+    TreePrefix/Three/Four/
+    TreePrefix/Three/Six/
+    TreePrefix/Deep/
+    TreePrefix/Deep/Deeper/
+    TreePrefix/Deep/Deeper/EvenDeeper/
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-2
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-12
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-9
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-10
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-14
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-8
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-11
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-5
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-1
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-4
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-13
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-15
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-3
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-7
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-3
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-7
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-2
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-9
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-4
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-8
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-0
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-1
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-5
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-6
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+26) Listing test: List a deep tree, prefix, verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/Two/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/Two/Five/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/Two/Four/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/Two/Six/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/One/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/One/Five/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/One/Four/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/One/Six/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/Three/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/Three/Five/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/Three/Four/
+    drwx------ pnico/pnico              0 2010-12-10 08:38 TreePrefix/Three/Six/
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/Deeper/
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/
+    -r-------- pnico/pnico            506 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-2
+    -rw------- pnico/pnico          17106 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-12
+    -rw------- pnico/pnico           1056 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-9
+    -r-------- pnico/pnico           2643 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-10
+    -rw------- pnico/pnico            758 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-14
+    -rw------- pnico/pnico           3838 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-8
+    -r-------- pnico/pnico            188 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-11
+    -rw------- pnico/pnico          13756 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-5
+    -r-------- pnico/pnico           2660 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-1
+    -r-------- pnico/pnico            140 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-4
+    -rw------- pnico/pnico           2045 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-13
+    -r-------- pnico/pnico            336 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-15
+    -rw------- pnico/pnico           1697 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-3
+    -rw------- pnico/pnico           1293 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    -rw------- pnico/pnico           2269 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-7
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/
+    drwx------ pnico/pnico              0 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/
+    -rw------- pnico/pnico            258 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-3
+    -rw------- pnico/pnico            347 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-7
+    -rw------- pnico/pnico            172 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-2
+    -rw------- pnico/pnico            321 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-9
+    -rw------- pnico/pnico            431 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-4
+    -rw------- pnico/pnico            239 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-8
+    -rw------- pnico/pnico            254 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-0
+    -rw------- pnico/pnico            724 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-1
+    -rw------- pnico/pnico            179 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-5
+    -rw------- pnico/pnico            164 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-6
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+27) Listing test: List a deep tree, named, prefix  (FAILURE)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-4
+    TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-2
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+  --------------------------
+  Differences ( < Submitted's > Reference):
+    1d0
+    < TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-4
+    2a2
+    > TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-4
+  --------------------------
+
+==========================================
+28) Listing test: List a deep tree, prefix, named, verbose  (FAILURE)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    -rw------- pnico/pnico            431 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-4
+    -rw------- pnico/pnico            172 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-2
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+  --------------------------
+  Differences ( < Submitted's > Reference):
+    1d0
+    < -rw------- pnico/pnico            431 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-4
+    2a2
+    > -rw------- pnico/pnico            431 2010-12-10 08:37 TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box/Treasure-4
+  --------------------------
+
+==========================================
+29) Listing test: Named subtree, no prefix  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-2
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-12
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-9
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-10
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-14
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-8
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-11
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-5
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-1
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-4
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-13
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-15
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-3
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-7
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd5
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd9
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd4
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd2
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd3
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd8
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd6
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd0
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd7
+    TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd1
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+30) Listing test: Named subtree, no prefix, verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    drwx------ pnico/pnico              0 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/
+    -r-------- pnico/pnico            506 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-2
+    -rw------- pnico/pnico          17106 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-12
+    -rw------- pnico/pnico           1056 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-9
+    -r-------- pnico/pnico           2643 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-10
+    -rw------- pnico/pnico            758 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-14
+    -rw------- pnico/pnico           3838 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-8
+    -r-------- pnico/pnico            188 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-11
+    -rw------- pnico/pnico          13756 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-5
+    -r-------- pnico/pnico           2660 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-1
+    -r-------- pnico/pnico            140 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-4
+    -rw------- pnico/pnico           2045 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-13
+    -r-------- pnico/pnico            336 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-15
+    -rw------- pnico/pnico           1697 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-3
+    -rw------- pnico/pnico           1293 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-6
+    -rw------- pnico/pnico           2269 2010-12-10 08:33 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/FarDownFile-7
+    drwx------ pnico/pnico              0 2010-12-10 08:29 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/
+    drwx------ pnico/pnico              0 2010-12-10 08:29 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/
+    drwx------ pnico/pnico              0 2010-12-10 11:17 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/
+    -rw------- pnico/pnico            179 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd5
+    -rw------- pnico/pnico            321 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd9
+    -rw------- pnico/pnico            431 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd4
+    -rw------- pnico/pnico            172 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd2
+    -rw------- pnico/pnico            258 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd3
+    -rw------- pnico/pnico            239 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd8
+    -rw------- pnico/pnico            164 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd6
+    -rw------- pnico/pnico            254 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd0
+    -rw------- pnico/pnico            347 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd7
+    -rw------- pnico/pnico            724 2010-12-10 08:31 TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/UnTermtd1
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+31) Listing test: Shallow Tree w/symlink  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    TreeWithLinks/
+    TreeWithLinks/LinkToTargetFile
+    TreeWithLinks/TargetFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+32) Listing test: Shallow Tree w/symlink, verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    drwx------ pnico/pnico              0 2010-12-10 11:49 TreeWithLinks/
+    lrwxrwxrwx pnico/pnico              0 2010-12-10 11:49 TreeWithLinks/LinkToTargetFile
+    -rw------- pnico/pnico          24406 2010-12-10 11:49 TreeWithLinks/TargetFile
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+33) Listing test: Shallow Tree w/different permissions  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    TreeWithPerms/
+    TreeWithPerms/File_555
+    TreeWithPerms/File_644
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+34) Listing test: Shallow Tree w/different permissions, verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    drwx------ pnico/pnico              0 2010-12-10 11:51 TreeWithPerms/
+    -r-xr-xr-x pnico/pnico             70 2010-12-10 11:51 TreeWithPerms/File_555
+    -rw-r--r-- pnico/pnico            244 2010-12-10 11:51 TreeWithPerms/File_644
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+  --------------------------
+
+==========================================
+35) Extraction test: single text file, non-verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: no path provided, extract all
+    newDir: (nil)
+  --------------------------
+
+==========================================
+36) Extraction test: single binary file, non-verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: no path provided, extract all
+    newDir: (nil)
+  --------------------------
+
+==========================================
+37) Extraction test: Two files in archive, non-verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: no path provided, extract all
+    newDir: (nil)
+    newDir: (nil)
+  --------------------------
+
+==========================================
+38) Extraction test: Two files in archive, one named, non-verbose  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: looping through all paths to extract
+    newDir: (nil)
+  --------------------------
+
+==========================================
+39) Extraction test: List a deep tree, no prefix  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: no path provided, extract all
+    	makePath: TreeNoPrefix
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Two
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Two
+    	makePath: TreeNoPrefix/Two/Five
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Two
+    	makePath: TreeNoPrefix/Two/Four
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Two
+    	makePath: TreeNoPrefix/Two/Six
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/One
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/One
+    	makePath: TreeNoPrefix/One/Five
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/One
+    	makePath: TreeNoPrefix/One/Four
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/One
+    	makePath: TreeNoPrefix/One/Six
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Three
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Three
+    	makePath: TreeNoPrefix/Three/Five
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Three
+    	makePath: TreeNoPrefix/Three/Four
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Three
+    	makePath: TreeNoPrefix/Three/Six
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x1b47f50
+  --------------------------
+
+==========================================
+40) Extraction test: List named files, no prefix  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: looping through all paths to extract
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x13dbf50
+    main: looping through all paths to extract
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x13dbf50
+  --------------------------
+
+==========================================
+41) Extraction test: List a deep tree, prefix  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: no path provided, extract all
+    	makePath: TreePrefix
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Two
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Two
+    	makePath: TreePrefix/Two/Five
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Two
+    	makePath: TreePrefix/Two/Four
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Two
+    	makePath: TreePrefix/Two/Six
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/One
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/One
+    	makePath: TreePrefix/One/Five
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/One
+    	makePath: TreePrefix/One/Four
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/One
+    	makePath: TreePrefix/One/Six
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Three
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Three
+    	makePath: TreePrefix/Three/Five
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Three
+    	makePath: TreePrefix/Three/Four
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Three
+    	makePath: TreePrefix/Three/Six
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x184af50
+  --------------------------
+
+==========================================
+42) Extraction test: List a deep tree, named, prefix  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: looping through all paths to extract
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x2352f50
+    main: looping through all paths to extract
+    	makePath: TreePrefix
+    	makePath: TreePrefix/Deep
+    	makePath: TreePrefix/Deep/Deeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix
+    	makePath: TreePrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace/OneMoreLevelToForceItIntoPrefix/Box
+    newDir: 0x2352f50
+  --------------------------
+
+==========================================
+43) Extraction test: Named subtree, no prefix  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: looping through all paths to extract
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+    	makePath: TreeNoPrefix
+    	makePath: TreeNoPrefix/Deep
+    	makePath: TreeNoPrefix/Deep/Deeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight
+    	makePath: TreeNoPrefix/Deep/Deeper/EvenDeeper/WayFarDown/ItsDarkDownHere/WheresMyFlashlight/ThePlace
+    newDir: 0xdbef50
+  --------------------------
+
+==========================================
+44) Extraction test: Shallow Tree w/symlink  (FAILURE)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: no path provided, extract all
+    	makePath: TreeWithLinks
+    newDir: 0x1d23f50
+    	makePath: TreeWithLinks
+    newDir: 0x1d23f50
+    making a new symlink -- linkname: TargetFile
+    making a new file at the symlink
+  --------------------------
+  --------------------------
+  Submitted's stderr:
+    extractArchive: No such file or directory
+  --------------------------
+  --------------------------
+  Differences ( < Submitted's > Reference):
+    Only in Test.outputs.5291/Reference/TreeWithLinks: LinkToTargetFile
+    Only in Test.outputs.5291/Reference/TreeWithLinks: TargetFile
+    Only in Test.outputs.5291/Submitted/TreeWithLinks: TreeWithLinksTargetFile
+  --------------------------
+
+==========================================
+45) Extraction test: Shallow Tree w/different permissions  (ok)
+==========================================
+  --------------------------
+  Submitted's stdout:
+    about to open the extract file
+    main: no path provided, extract all
+    	makePath: TreeWithPerms
+    newDir: 0x1371f50
+    	makePath: TreeWithPerms
+    newDir: 0x1371f50
+    	makePath: TreeWithPerms
+    newDir: 0x1371f50
+  --------------------------
