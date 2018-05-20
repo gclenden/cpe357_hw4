@@ -7,7 +7,7 @@
 
 #include "extracttar.h"
 
-int listArchive(int file, char *path, int verbose, int strict)
+int listArchive(int file, char **argv, int argc, int pathindex, int verbose, int strict)
 {	
 	int nextheader = 0;
 	block *newBlock = NULL;
@@ -16,6 +16,7 @@ int listArchive(int file, char *path, int verbose, int strict)
 	int i;	
 	int eoa = 0;
 	int pathlen=0;
+	int match=0;
 
 	if((newBlock=makeBlock())==NULL)
 		return -1;
@@ -25,10 +26,8 @@ int listArchive(int file, char *path, int verbose, int strict)
 		free(newBlock);
 		return -1;
 	}
-	
-	pathlen=strlen(path);
 
-	/*printf("path: %s\n", path);
+	/*printf("pathlen: %i -- path: %s\n", pathlen, path);
 	*/
 	while(read(file, newBlock->data, 512)>0)
 	{
@@ -77,23 +76,37 @@ int listArchive(int file, char *path, int verbose, int strict)
                         if(newMetaData->size%512)
                                 nextheader+=1;
 
-			
-			if(pathlen>255 || strncmp((char *)path, (char *)newMetaData->name, pathlen)!=0)
-				continue;	
-			
+			match=0;
+
+			if(argv!=NULL)
+			{				
+				for(i=pathindex; i<argc; i++)
+				{
+					pathlen=strlen(argv[i]);
+					if(pathlen<=256 && strncmp((char *)argv[i], (char *)newMetaData->name, pathlen)==0)
+						match=1;	
+				}
+			}
+
+			else
+				match=1;	
+
+			if(!match)
+				continue;
+
 			if(!verbose)
 			{
 				printf("%s\n", newMetaData->name);
 				continue;
 			}
 
-			/*makePath(path);*/
+			/*makePath(path);
 
 			if (!verbose) 
 			{
-        		        /*print file name*/
+
 	               		 printf("%s\n", newMetaData->name);
-			}
+			}*/
 	
 			/*the paths match, extract this entry*/
 			switch(*(newBlock->typeflag))

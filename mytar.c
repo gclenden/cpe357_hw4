@@ -99,14 +99,14 @@ int main(int argc, char** argv)
 					return 0;         	
 	
 				while(pathindex<argc)
-				{	
+				{		
 					if(createArchive(file, argv[pathindex], flags[3], flags[5])<0)
 					{
 						close(file);
 						perror("createArchive");
 						return -1;
 					}
-				
+					
 					pathindex++;
 				}
 			
@@ -132,7 +132,7 @@ int main(int argc, char** argv)
                                 /*no path was provided, print everything*/
                                 if(pathindex==argc)
                                 {
-				        if(listArchive(file, "", flags[3], flags[5])<0)
+				        if(listArchive(file, NULL, 0, 0, flags[3], flags[5])<0)
                                         {       
                                                 close(file);
                                                 perror("listArchive");
@@ -140,19 +140,11 @@ int main(int argc, char** argv)
                                         }
 				}
 
-				else
-				{	while(pathindex<argc)
-                                	{
-						lseek(file, 0, SEEK_SET);
-						if(listArchive(file, argv[pathindex], flags[3], flags[5])<0)
-	                                        {       
-							close(file);
-	                                                perror("listArchive");
-	                                                return -1;
-	                                        }
-	
-	                                        pathindex++;
-	                                }
+				else if(listArchive(file, argv, argc, pathindex, flags[3], flags[5])<0)
+	                        {       
+					close(file);
+	                                perror("listArchive");
+	                                return -1;
 				}
 			}
 
@@ -391,7 +383,7 @@ DIR *makePath(char *path)
 
 int checkHeader(block *myBlock, int strict)
 {
-	if(strncmp(myBlock->magic, "ustar", 5)==0)
+	if(strncmp((char *)myBlock->magic, "ustar", 5)==0)
 	{
 		if(!strict)
 			return 0;
@@ -403,3 +395,7 @@ int checkHeader(block *myBlock, int strict)
 	return -1;
 }
 
+int argsort(const void *str1, const void *str2)
+{
+	return strcmp((char *)str1, (char *)str2);
+}

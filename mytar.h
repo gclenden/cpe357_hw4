@@ -16,15 +16,14 @@ typedef struct blockStruct block;
 typedef struct metaDataStruct metaData;
 
 void printUsage();
-int createArchive(int file, char *path, int verbose, int strict);
-int listArchive(int file, char *path, int verbose, int strict);
-int extractArchive(int file, char *path, int verbose, int strict);
+
 block *makeBlock();
 block *resetBlock(block *old);
 metaData *makeMetaData();
 metaData *updateMetaData(metaData *myMD, block *header);
 DIR *makePath(char *path);
-int checkHeaer(block *myBlock, int strict);
+int checkHeader(block *myBlock, int strict);
+int argsort(const void *str1, const void *str2);
 
 struct blockStruct
 {
