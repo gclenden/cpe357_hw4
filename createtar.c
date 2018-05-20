@@ -44,10 +44,16 @@ int createArchive(int file, char *path, int verbose, int strict)
 	int split = prefix(path);
 	if (split == -1) {
 		strcpy((char*)header->name, path);
+		if (S_ISDIR(fileStats.st_mode)) {
+			header->name[strlen(path)] = '/';
+		}
 	} else {
 		strncpy((char*)header->prefix, path, split - 1);
 		char *name = &(path[split + 1]);
 		strcpy((char*)header->name, name);
+		if (S_ISDIR(fileStats.st_mode)) {
+			header->name[strlen(name)] = '/';
+		}
 	}
 
 	printf("%s\n", (char*) header->name);
@@ -98,7 +104,12 @@ int createArchive(int file, char *path, int verbose, int strict)
 
 	char fileSizeBuff[12];
 	char fileSizeTestBuff[14];
-	int fileSize = fileStats.st_size;
+	int fileSize;
+	if (S_ISDIR(fileStats.st_mode)) {
+		fileSize = 0;
+	} else {
+		fileSize = fileStats.st_size;
+	}
 	snprintf(fileSizeTestBuff, 14, "%o", fileSize);
 	int filesizelen = strlen(fileSizeTestBuff);
 	if (filesizelen > 11) {
@@ -210,11 +221,9 @@ int createArchive(int file, char *path, int verbose, int strict)
 	/*write contents of old file to new file*/
 	block *bodyBuff = resetBlock(header);	
 	while (read(fd, &(bodyBuff->data), 512) > 0) {
-		printf("printing block\n");
 		write(file, &(bodyBuff->data), 512);
 		bodyBuff = resetBlock(bodyBuff);
 	}
-	write(file, &(bodyBuff->data), 512);
 	DIR *currDir;	
 	if((currDir=opendir(path))==NULL)
 	{
@@ -227,17 +236,26 @@ int createArchive(int file, char *path, int verbose, int strict)
 	while((nextDir=readdir(currDir))!=NULL)
 	{
 		
-		if(strcmp(nextDir->d_name, ".")||strcmp(nextDir->d_name, "..")) {
+		if(strcmp(nextDir->d_name, ".")!=0 && strcmp(nextDir->d_name, "..")!=0) {
 			char pathBuff[256] = {0};
 			strcpy(pathBuff, path);
+			pathBuff[strlen(path)] = '/';
 			if (strlen(path) + strlen(nextDir->d_name) <= 255) {
+			/*	printf("cat-ing name to path\n");*/
 				strcat(pathBuff, nextDir->d_name);
 			} else {
-				perror("path name must be shorter than 256 characters\n");
+			/*	perror("path name must be shorter than 256 characters\n");*/
                 		return -1;
 			}
-			printf("recursing/n");
+			/*int pathLen = strlen(path);
+			int fileLen = strlen(nextDir->d_name);
+			char *newPath = (char*) malloc(pathLen+fileLen+1);
+			strcpy(newPath, path);
+			strcat(newPath, nextDir->d_name); 
+			printf("new path name: %s\n", pathBuff);
+			printf("recursing\n");*/
 			createArchive(file, pathBuff, verbose, strict);
+			/*free(newPath);*/
 		}
 	}
 	
