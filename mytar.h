@@ -16,6 +16,10 @@ typedef struct blockStruct block;
 typedef struct metaDataStruct metaData;
 
 void printUsage();
+int updateFlags(char **argv, uint8_t *flags);
+int callCreate(uint8_t *flags, int pathindex, int file, char **argv, int argc);
+int callList(uint8_t *flags, int pathindex, int file, char **argv, int argc);
+int callExtract(uint8_t *flags, int pathindex, int file, char **argv, int argc);
 
 block *makeBlock();
 block *resetBlock(block *old);

@@ -13,7 +13,13 @@
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
+#include "mytar.h"
 
 int listArchive(int file, char **argv, int argc, int pathindex, int verbose, int strict);
+int handleHeader(int file, metaData *newMetaData, block *newBlock, char ** argv, int pathindex, int argc, int verbose, int strict, int *nextheader);
+int checkMatch(int pathindex, char **argv, int argc, metaData *newMetaData, int pathlen);
+int printType(uint8_t ch);
+int printPermissions(char * mode);
+
 
 #endif
